@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { dev, playersDevMode } from "config.js";
 
-// import FibbageClient from "components/FibbageClient";
+import FibbageClient from "components/FibbageClient";
 
 const RoomClient = () => {
   const history = useHistory();
@@ -11,7 +11,7 @@ const RoomClient = () => {
     return <Redirect to="/" />;
   }
 
-  // return <FibbageClient />;
+  return <FibbageClient />;
 };
 
 export default RoomClient;

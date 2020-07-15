@@ -12,11 +12,7 @@ const FibbagePromptInfo = ({
     <Container>
       {!hideTitle && <HeadingSecondary>{prompt.title}</HeadingSecondary>}
       {!hideDescription && <Text>{prompt.description}</Text>}
-      {!hideAdditionalInfo && (
-        <TextAlt>
-          {prompt.additionalInfo && `( ${prompt.additionalInfo} )`}
-        </TextAlt>
-      )}
+      {!hideAdditionalInfo && <TextAlt>{prompt.additionalInfo}</TextAlt>}
     </Container>
   );
 };

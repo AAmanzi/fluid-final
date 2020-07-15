@@ -48,22 +48,22 @@ const FibbageHost = ({ roomCode }) => {
   }, [currentEvent]);
 
   useEffect(() => {
-    socket.on("host/recieve/game-start", () => {
-      handleStartGame();
-    });
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    socket.on("host/recieve/player-join", ({ name, socketId }) => {
+    socket.on("client/join", ({ name, socketId }) => {
       addPlayer({ name, socketId });
     });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("host/recieve/player-disconnect", ({ socketId }) => {
+    socket.on("client/disconnect", ({ socketId }) => {
       removePlayer(socketId);
+    });
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    socket.on("host/recieve/game-start", () => {
+      handleStartGame();
     });
     // eslint-disable-next-line
   }, []);
