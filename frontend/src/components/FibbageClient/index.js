@@ -16,15 +16,7 @@ const FibbageClient = () => {
   const [answers, setAnswers] = useState(null);
 
   useEffect(() => {
-    socket.on("client/recieve/game-start", () => {
-      setIsStarted(true);
-    });
-
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    socket.on("client/recieve/skipped", () => {
+    socket.on("client/receive/skipped", () => {
       setPrompt(null);
       setAnswers(null);
     });
@@ -33,15 +25,19 @@ const FibbageClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("client/recieve/prompt", ({ prompt }) => {
+    socket.on("client/receive/start-answering", ({ prompt }) => {
       setPrompt(prompt);
+
+      if (!isStarted) {
+        setIsStarted(true);
+      }
     });
 
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("client/recieve/answers", ({ answers }) => {
+    socket.on("client/receive/start-choosing", ({ answers }) => {
       setAnswers(answers);
     });
 

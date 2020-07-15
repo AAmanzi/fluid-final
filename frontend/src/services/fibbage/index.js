@@ -24,8 +24,8 @@ const getRandomPrompt = () => {
 
 const initialState = {
   players: playersDevMode ? devPlayers : [],
-  displayedPrompt: null,
-  currentEvent: eventTypes.ANSWERING_PROMPT,
+  displayedPrompt: getRandomPrompt(),
+  currentEvent: eventTypes.CHOOSING_ANSWERS,
 
   gameStart: false,
   gameEnd: false,
@@ -34,7 +34,6 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   const prevPlayers = [...state.players];
   const prevEvent = { ...state }.currentEvent;
-  const prevPrompt = { ...state.displayedPrompt };
 
   switch (action.type) {
     case "ADD_PLAYER":
@@ -51,12 +50,12 @@ const reducer = (state = initialState, action) => {
         players: [...state.players, action.player],
       };
     case "REMOVE_PLAYER":
-      const newPlayers = prevPlayers.filter(
+      const newPlayersRemove = prevPlayers.filter(
         (player) => player.socketId !== action.socketId
       );
       return {
         ...state,
-        players: newPlayers,
+        players: newPlayersRemove,
       };
     case "START_GAME":
       return {
@@ -68,18 +67,33 @@ const reducer = (state = initialState, action) => {
         prevEvent === eventTypes.CHOOSING_ANSWERS
           ? eventTypes.ANSWERING_PROMPT
           : eventTypes.CHOOSING_ANSWERS;
-      const newPrompt =
-        newEvent === eventTypes.ANSWERING_PROMPT ? null : prevPrompt;
+      const newPlayersNextTurn =
+        newEvent === eventTypes.CHOOSING_ANSWERS
+          ? prevPlayers
+          : prevPlayers.map((player) => ({ ...player, answer: null }));
 
       return {
         ...state,
         currentEvent: newEvent,
-        displayedPrompt: newPrompt,
+        players: newPlayersNextTurn,
       };
     case "SET_PROMPT":
       return {
         ...state,
         displayedPrompt: action.prompt,
+      };
+    case "SET_PLAYER_ANSWER":
+      const newPlayersAnswer = [...prevPlayers];
+
+      const playerToEdit = newPlayersAnswer.find(
+        (player) => player.socketId === action.socketId
+      );
+
+      playerToEdit.answer = action.answer;
+
+      return {
+        ...state,
+        players: newPlayersAnswer,
       };
     default:
       return { ...state };
@@ -93,6 +107,7 @@ export const FibbageContext = React.createContext({
   startGame: () => {},
   handleNextTurn: () => {},
   getNewPrompt: () => {},
+  setPlayerAnswer: () => {},
 });
 
 const FibbageProvider = ({ children }) => {
@@ -111,6 +126,7 @@ const FibbageProvider = ({ children }) => {
 
   const startGame = () => {
     dispatch({ type: "START_GAME" });
+    dispatch({ type: "HANDLE_NEXT_TURN" });
   };
 
   const handleNextTurn = () => {
@@ -123,6 +139,10 @@ const FibbageProvider = ({ children }) => {
     dispatch({ type: "SET_PROMPT", prompt: newPrompt });
   };
 
+  const setPlayerAnswer = (answer, socketId) => {
+    dispatch({ type: "SET_PLAYER_ANSWER", answer, socketId });
+  };
+
   const value = {
     state,
     addPlayer,
@@ -130,6 +150,7 @@ const FibbageProvider = ({ children }) => {
     startGame,
     handleNextTurn,
     getNewPrompt,
+    setPlayerAnswer,
   };
 
   return (

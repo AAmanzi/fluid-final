@@ -26,25 +26,40 @@ import {
 const FibbageHost = ({ roomCode }) => {
   const socket = useSocket();
   const {
-    state: { currentEvent },
+    state: { currentEvent, displayedPrompt },
     addPlayer,
     removePlayer,
+    setPlayerAnswer,
+    handleNextTurn,
   } = useContext(FibbageContext);
-  const { players } = usePlayers();
+  const players = usePlayers();
   const { gameStart, gameEnd, startGame } = useGame();
   const [showPrompt, setShowPrompt] = useState(false);
 
   const handleStartGame = () => {
-    socket.emit("host/send/game-start", players);
     startGame();
+  };
+
+  const handleEmitChoosing = () => {
+    socket.emit("host/send/start-choosing", { players });
+  };
+
+  const handleEmitAnswering = () => {
+    socket.emit("host/send/start-answering", {
+      players,
+      prompt: displayedPrompt,
+    });
   };
 
   useEffect(() => {
     if (currentEvent === eventTypes.CHOOSING_ANSWERS) {
       setShowPrompt(false);
+      handleEmitChoosing();
     } else {
-      setTimeout(() => setShowPrompt(true), 2500);
+      setShowPrompt(true);
+      handleEmitAnswering();
     }
+    // eslint-disable-next-line
   }, [currentEvent]);
 
   useEffect(() => {
@@ -62,27 +77,39 @@ const FibbageHost = ({ roomCode }) => {
   }, []);
 
   useEffect(() => {
-    socket.on("host/recieve/game-start", () => {
+    socket.on("host/receive/game-start", () => {
       handleStartGame();
     });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("host/recieve/prompt-answer", ({ answer }) => {
-      // debounced({ answer });
+    socket.on("host/receive/answer", ({ answer, socketId }) => {
+      setPlayerAnswer(answer, socketId);
     });
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (
+      !!players.length &&
+      !players.some((player) => !player.answer) &&
+      currentEvent === eventTypes.ANSWERING_PROMPT
+    ) {
+      handleNextTurn();
+    }
+  }, [players, handleNextTurn, currentEvent]);
 
   return (
     <Screen background={BackgroundImage}>
       <GameContainer>
         <PlayerList />
 
-        {showPrompt && gameStart && !gameEnd && <Prompt prompt={prompt} />}
+        {showPrompt && gameStart && !gameEnd && (
+          <Prompt prompt={displayedPrompt} />
+        )}
         {!showPrompt && gameStart && !gameEnd && (
-          <DisplayResults prompt={prompt} />
+          <DisplayResults prompt={displayedPrompt} />
         )}
 
         {!gameStart && (
