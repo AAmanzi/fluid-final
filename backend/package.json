@@ -1,0 +1,30 @@
+{
+  "name": "fluid",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js --exec babel-node --presets env",
+    "release": "yarn run clean && yarn run build && yarn run serve",
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "babel . -s -D -d dist --presets env --ignore node_modules",
+    "serve": "node dist/index.js",
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon src/index.js --exec babel-node --presets env"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "knex": "^0.21.2",
+    "nodemon": "^2.0.4",
+    "pg": "^8.3.0",
+    "socket.io": "^2.3.0"
+  },
+  "engines": {
+    "node": "v10.16.3",
+    "npm": "5.6.0"
+  }
+}

@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #e5e5e5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  color: #282856;
+  text-align: center;
+  font-family: "Roboto";
+  font-weight: 500;
+}
+
+::selection {
+  background-color: #ee5d6c55;
+}
+
+button {
+  background-color: #282856;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.2s all ease-in-out;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+button:focus {
+  outline: 0;
+  opacity: 1;
+}
+
+input:focus {
+  outline: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  opacity: 0.9;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("./assets/fonts/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Annie";
+  src: url("./assets/fonts/AnnieUseYourTelescope-Regular.ttf")
+    format("truetype");
+  font-weight: 500;
+}
