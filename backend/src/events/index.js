@@ -1,15 +1,23 @@
-import fibbageEvents from "./fibbage";
+import fibbageHostEvents from "./host/fibbage";
+import fibbageClientEvents from "./client/fibbage";
 import RoomsResolver from "../resolvers/Room";
+import { roomTypeEnum } from "../models/Room";
 
 const handleCreate = (socket, io) => {
-  socket.on("create", async ({ socketId, type }) => {
+  socket.on("host/send/create", async ({ socketId, type }) => {
     const room = await RoomsResolver.mutation.createRoom(type, socketId);
 
-    socket.emit("create/success", room && room.code);
+    if (!room) {
+      socket.emit("host/receive/room-create-error");
+
+      return;
+    }
+
+    socket.emit("host/receive/room-create-success", room.code);
 
     switch (room.type) {
-      case "FIBBAGE":
-        fibbageEvents(socket, io, socketId);
+      case roomTypeEnum.fibbage:
+        fibbageHostEvents(socket, io);
         break;
       default:
         break;
@@ -22,29 +30,32 @@ const handleCreate = (socket, io) => {
 };
 
 const handleJoin = (socket, io) => {
-  socket.on("join", async ({ roomCode, username, socketId }) => {
+  socket.on("client/send/join", async ({ roomCode, username, socketId }) => {
     const room = await RoomsResolver.query.room(roomCode);
 
     if (!room) {
-      socket.emit("join/error");
+      socket.emit("client/receive/join-error");
 
       return;
     }
 
-    socket.emit("join/success");
+    socket.emit("client/receive/join-success");
 
-    io.to(room.hostId).emit("client/join", { name: username, socketId });
+    io.to(room.hostId).emit("host/receive/player-join", {
+      name: username,
+      socketId,
+    });
 
     switch (room.type) {
-      case "FIBBAGE":
-        fibbageEvents(socket, io, room.hostId);
+      case roomTypeEnum.fibbage:
+        fibbageClientEvents(socket, io, room.hostId);
         break;
       default:
         break;
     }
 
     socket.on("disconnect", () => {
-      io.to(room.hostId).emit("client/disconnect", { socketId });
+      io.to(room.hostId).emit("host/receive/player-disconnect", { socketId });
     });
   });
 };

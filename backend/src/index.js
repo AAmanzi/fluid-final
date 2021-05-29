@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import http from "http";
 import socketIo from "socket.io";
 
@@ -21,7 +20,7 @@ io.on("connection", (socket) => {
 });
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 const PORT = process.env.PORT || 8009;
 

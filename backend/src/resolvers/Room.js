@@ -1,4 +1,4 @@
-import { rooms, ROOM_TYPES } from "../models/Room";
+import { rooms, roomTypeEnum } from "../models/Room";
 import { getRandomString } from "../utils/string";
 
 const RoomsResolver = {
@@ -21,7 +21,9 @@ const RoomsResolver = {
         return;
       }
 
-      if (!ROOM_TYPES.includes(type)) {
+      const roomTypes = Object.values(roomTypeEnum);
+
+      if (!roomTypes.includes(type)) {
         return;
       }
 
