@@ -17,15 +17,17 @@ import {
   WaitingContainer,
   ButtonStart,
 } from './index.styled';
+import DisplayResults from './DisplayResults';
 
 const FibbageHost = ({ roomCode }) => {
   const {
-    state: { currentEvent, currentPrompt, gameStart, gameEnd, players },
+    state: { currentEvent, gameStart, gameEnd, players },
     addPlayer,
     removePlayer,
-    setPlayerAnswer,
-    handleNextTurn,
     startGame,
+    handleNextTurn,
+    setPlayerAnswer,
+    setPlayerChoice,
   } = useFibbageContext();
 
   useEffect(() => {
@@ -75,12 +77,31 @@ const FibbageHost = ({ roomCode }) => {
   }, [setPlayerAnswer]);
 
   useEffect(() => {
-    if (
-      !!players.length &&
-      players.every((player) => player.answer !== null) &&
-      currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt
-    ) {
-      handleNextTurn();
+    socket.off('host/receive/choice');
+    socket.on('host/receive/choice', ({ choice, socketId }) => {
+      setPlayerChoice(choice, socketId);
+    });
+
+    return () => {
+      socket.off('host/receive/choice');
+    };
+  });
+
+  useEffect(() => {
+    if (!!players.length) {
+      if (
+        currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt &&
+        players.every((player) => player.answer !== null)
+      ) {
+        handleNextTurn();
+      }
+
+      if (
+        currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers &&
+        players.every((player) => player.choice !== null)
+      ) {
+        handleNextTurn();
+      }
     }
   }, [players, handleNextTurn, currentEvent]);
 
@@ -103,11 +124,15 @@ const FibbageHost = ({ roomCode }) => {
     }
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
-      return <AnsweringPrompt prompt={currentPrompt} />;
+      return <AnsweringPrompt />;
     }
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
-      return <ChoosingAnswers prompt={currentPrompt} />;
+      return <ChoosingAnswers />;
+    }
+
+    if (currentEvent === FIBBAGE_EVENT_TYPE.displayResults) {
+      return <DisplayResults />;
     }
   };
 

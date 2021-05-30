@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
-import { ButtonRadio, ButtonSecondary } from '../styled';
+
+import { socket } from 'src/config';
+import { ButtonRadio, ButtonSecondary } from 'src/components/styled';
 
 import { PromptContainer } from './index.styled';
 
-const ChooseAnswer = ({ answers, onConfirm }) => {
+const ChoosingAnswers = ({ answers, onConfirm }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  const handleConfirm = () => {
+    socket.emit('client/send/choice', { selectedAnswer, socketId: socket.id });
+    onConfirm();
+  };
 
   return (
     <PromptContainer>
       {answers.map((answer) => (
         <ButtonRadio
           onClick={() => setSelectedAnswer(answer)}
-          isSelected={answer.playerId === selectedAnswer.playerId}>
-          {answer.label}
+          isSelected={answer === selectedAnswer}>
+          {answer}
         </ButtonRadio>
       ))}
 
       <ButtonSecondary
         background='red'
-        onClick={() => onConfirm(selectedAnswer.label)}
+        onClick={handleConfirm}
         disabled={!selectedAnswer}>
         Confirm
       </ButtonSecondary>
@@ -26,4 +33,4 @@ const ChooseAnswer = ({ answers, onConfirm }) => {
   );
 };
 
-export default ChooseAnswer;
+export default ChoosingAnswers;

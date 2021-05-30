@@ -2,16 +2,17 @@ import React, { useEffect } from 'react';
 
 import PromptInfo from 'src/components/FibbagePromptInfo';
 import { socket } from 'src/config';
-import { usePlayers } from 'src/providers/fibbage/hooks';
+import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
 import { shuffle } from 'src/utils/array';
 
-import { DisplayContainer } from './index.styled';
+import { AnswersContainer, AnswerTag, DisplayContainer } from './index.styled';
 
-const ChoosingAnswers = ({ prompt }) => {
+const ChoosingAnswers = () => {
+  const currentPrompt = useCurrentPrompt();
   const players = usePlayers();
 
   const playerAnswers = players.map((player) => player.answer);
-  const answers = shuffle([...playerAnswers, prompt.answer]);
+  const answers = shuffle([...playerAnswers, currentPrompt.answer]);
 
   useEffect(() => {
     socket.emit('host/send/start-choosing', { answers });
@@ -20,7 +21,12 @@ const ChoosingAnswers = ({ prompt }) => {
 
   return (
     <DisplayContainer>
-      <PromptInfo prompt={prompt} hideTitle hideAdditionalInfo />
+      <PromptInfo prompt={currentPrompt} hideTitle hideDescription />
+      <AnswersContainer>
+        {answers.map((answer, index) => (
+          <AnswerTag key={index}>{answer}</AnswerTag>
+        ))}
+      </AnswersContainer>
     </DisplayContainer>
   );
 };

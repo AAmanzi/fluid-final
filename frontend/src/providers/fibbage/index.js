@@ -28,6 +28,7 @@ const actionType = {
   HANDLE_NEXT_TURN: 'HANDLE_NEXT_TURN',
   GET_NEW_PROMPT: 'GET_NEW_PROMPT',
   SET_PLAYER_ANSWER: 'SET_PLAYER_ANSWER',
+  SET_PLAYER_CHOICE: 'SET_PLAYER_CHOICE',
 };
 
 const reducer = (state = initialState, action) => {
@@ -63,21 +64,39 @@ const reducer = (state = initialState, action) => {
         gameStart: true,
       };
     case actionType.HANDLE_NEXT_TURN:
-      const isChoosingAnswersNext =
-        prevEvent !== null && prevEvent === FIBBAGE_EVENT_TYPE.answeringPrompt;
+      const shouldDrawNewPrompt =
+        prevEvent === null || prevEvent === FIBBAGE_EVENT_TYPE.displayResults;
 
-      const newEvent = isChoosingAnswersNext
-        ? FIBBAGE_EVENT_TYPE.choosingAnswers
-        : FIBBAGE_EVENT_TYPE.answeringPrompt;
+      const getNewEventType = () => {
+        if (prevEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
+          return FIBBAGE_EVENT_TYPE.choosingAnswers;
+        }
 
-      const newPlayersNextTurn = isChoosingAnswersNext
-        ? prevPlayers
-        : prevPlayers.map((player) => ({ ...player, answer: null }));
+        if (prevEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
+          return FIBBAGE_EVENT_TYPE.displayResults;
+        }
 
-      if (isChoosingAnswersNext) {
+        if (prevEvent === FIBBAGE_EVENT_TYPE.displayResults) {
+          return FIBBAGE_EVENT_TYPE.answeringPrompt;
+        }
+
+        return FIBBAGE_EVENT_TYPE.answeringPrompt;
+      };
+
+      const newEventType = getNewEventType();
+
+      const newPlayersNextTurn = shouldDrawNewPrompt
+        ? prevPlayers.map((player) => ({
+            ...player,
+            answer: null,
+            choice: null,
+          }))
+        : prevPlayers.map((player) => ({ ...player }));
+
+      if (!shouldDrawNewPrompt) {
         return {
           ...state,
-          currentEvent: newEvent,
+          currentEvent: newEventType,
           players: newPlayersNextTurn,
         };
       }
@@ -87,7 +106,7 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        currentEvent: newEvent,
+        currentEvent: newEventType,
         players: newPlayersNextTurn,
         currentPrompt: newPrompt,
         prompts: state.prompts.filter((_, index) => index !== newPromptIndex),
@@ -95,15 +114,28 @@ const reducer = (state = initialState, action) => {
     case actionType.SET_PLAYER_ANSWER:
       const newPlayersAnswer = [...prevPlayers];
 
-      const playerToEdit = newPlayersAnswer.find(
+      const playerToEditAnswer = newPlayersAnswer.find(
         (player) => player.socketId === action.socketId
       );
 
-      playerToEdit.answer = action.answer;
+      playerToEditAnswer.answer = action.answer;
 
       return {
         ...state,
         players: newPlayersAnswer,
+      };
+    case actionType.SET_PLAYER_CHOICE:
+      const newPlayersChoice = [...prevPlayers];
+
+      const playerToEditChoice = newPlayersChoice.find(
+        (player) => player.socketId === action.socketId
+      );
+
+      playerToEditChoice.choice = action.choice;
+
+      return {
+        ...state,
+        players: newPlayersChoice,
       };
     default:
       return { ...state };
@@ -117,6 +149,7 @@ export const FibbageContext = React.createContext({
   startGame: () => {},
   handleNextTurn: () => {},
   setPlayerAnswer: () => {},
+  setPlayerChoice: () => {},
 });
 
 const FibbageProvider = ({ children }) => {
@@ -125,6 +158,7 @@ const FibbageProvider = ({ children }) => {
   const addPlayer = (player) => {
     player.score = 0;
     player.answer = null;
+    player.choice = null;
 
     dispatch({ type: actionType.ADD_PLAYER, player });
   };
@@ -146,6 +180,10 @@ const FibbageProvider = ({ children }) => {
     dispatch({ type: actionType.SET_PLAYER_ANSWER, answer, socketId });
   };
 
+  const setPlayerChoice = (choice, socketId) => {
+    dispatch({ type: actionType.SET_PLAYER_CHOICE, choice, socketId });
+  };
+
   const value = {
     state,
     addPlayer,
@@ -153,6 +191,7 @@ const FibbageProvider = ({ children }) => {
     startGame,
     handleNextTurn,
     setPlayerAnswer,
+    setPlayerChoice,
   };
 
   return (

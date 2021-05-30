@@ -238,3 +238,25 @@ export const NumberContainer = styled.div`
     font-size: 200px !important;
   }
 `;
+
+export const AnswersContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+export const AnswerTag = styled.div`
+  font-size: 34px;
+  padding: 8px 2px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  color: white;
+  background-color: #ee5d6c;
+
+  width: calc(100% / 3 - 8px);
+
+  &:not(:nth-child(3n)) {
+    margin-right: 6px;
+  }
+`;

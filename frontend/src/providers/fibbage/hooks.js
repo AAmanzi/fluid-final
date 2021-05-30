@@ -24,3 +24,19 @@ export const usePlayers = () => {
 
   return players;
 };
+
+export const useCurrentPrompt = () => {
+  const {
+    state: { currentPrompt },
+  } = useFibbageContext();
+
+  return currentPrompt;
+};
+
+export const useCurrentEvent = () => {
+  const {
+    state: { currentEvent },
+  } = useFibbageContext();
+
+  return currentEvent;
+};

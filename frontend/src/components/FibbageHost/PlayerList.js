@@ -1,6 +1,7 @@
 import React from 'react';
+import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
-import { usePlayers } from 'src/providers/fibbage/hooks';
+import { useCurrentEvent, usePlayers } from 'src/providers/fibbage/hooks';
 
 import {
   PlayerName,
@@ -14,7 +15,22 @@ import {
 } from './index.styled';
 
 const PlayerList = () => {
+  const currentEvent = useCurrentEvent();
   const players = usePlayers();
+
+  const getHasAnswered = (player) => {
+    if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
+      return player.answer !== null;
+    }
+
+    if (currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
+      return player.choice !== null;
+    }
+
+    if (currentEvent === FIBBAGE_EVENT_TYPE.displayResults) {
+      return false;
+    }
+  };
 
   return (
     <PlayerListContainer>
@@ -22,7 +38,7 @@ const PlayerList = () => {
         {players.map((player, index) => (
           <PlayerCard
             key={player.socketId}
-            hasAnswered={player.answer !== null}>
+            hasAnswered={getHasAnswered(player)}>
             <PlayerNumber>{index + 1}</PlayerNumber>
             <PlayerInfo>
               <PlayerName>{player.name}</PlayerName>
