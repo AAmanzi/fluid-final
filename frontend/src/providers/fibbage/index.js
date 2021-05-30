@@ -14,8 +14,8 @@ const initialState = {
   players: initialPlayers,
   prompts: initialPrompts,
 
-  displayedPrompt: null,
-  currentEvent: FIBBAGE_EVENT_TYPE.choosingAnswers,
+  currentPrompt: null,
+  currentEvent: null,
 
   gameStart: false,
   gameEnd: false,
@@ -63,27 +63,33 @@ const reducer = (state = initialState, action) => {
         gameStart: true,
       };
     case actionType.HANDLE_NEXT_TURN:
-      const newEvent =
-        prevEvent === FIBBAGE_EVENT_TYPE.choosingAnswers
-          ? FIBBAGE_EVENT_TYPE.answeringPrompt
-          : FIBBAGE_EVENT_TYPE.choosingAnswers;
-      const newPlayersNextTurn =
-        newEvent === FIBBAGE_EVENT_TYPE.choosingAnswers
-          ? prevPlayers
-          : prevPlayers.map((player) => ({ ...player, answer: null }));
+      const isChoosingAnswersNext =
+        prevEvent !== null && prevEvent === FIBBAGE_EVENT_TYPE.answeringPrompt;
 
-      return {
-        ...state,
-        currentEvent: newEvent,
-        players: newPlayersNextTurn,
-      };
-    case actionType.GET_NEW_PROMPT:
+      const newEvent = isChoosingAnswersNext
+        ? FIBBAGE_EVENT_TYPE.choosingAnswers
+        : FIBBAGE_EVENT_TYPE.answeringPrompt;
+
+      const newPlayersNextTurn = isChoosingAnswersNext
+        ? prevPlayers
+        : prevPlayers.map((player) => ({ ...player, answer: null }));
+
+      if (isChoosingAnswersNext) {
+        return {
+          ...state,
+          currentEvent: newEvent,
+          players: newPlayersNextTurn,
+        };
+      }
+
       const newPromptIndex = Math.floor(Math.random() * state.prompts.length);
       const newPrompt = { ...state.prompts[newPromptIndex] };
 
       return {
         ...state,
-        displayedPrompt: newPrompt,
+        currentEvent: newEvent,
+        players: newPlayersNextTurn,
+        currentPrompt: newPrompt,
         prompts: state.prompts.filter((_, index) => index !== newPromptIndex),
       };
     case actionType.SET_PLAYER_ANSWER:
@@ -110,7 +116,6 @@ export const FibbageContext = React.createContext({
   removePlayer: () => {},
   startGame: () => {},
   handleNextTurn: () => {},
-  getNewPrompt: () => {},
   setPlayerAnswer: () => {},
 });
 
@@ -137,10 +142,6 @@ const FibbageProvider = ({ children }) => {
     dispatch({ type: actionType.HANDLE_NEXT_TURN });
   };
 
-  const getNewPrompt = () => {
-    dispatch({ type: actionType.GET_NEW_PROMPT });
-  };
-
   const setPlayerAnswer = (answer, socketId) => {
     dispatch({ type: actionType.SET_PLAYER_ANSWER, answer, socketId });
   };
@@ -151,7 +152,6 @@ const FibbageProvider = ({ children }) => {
     removePlayer,
     startGame,
     handleNextTurn,
-    getNewPrompt,
     setPlayerAnswer,
   };
 

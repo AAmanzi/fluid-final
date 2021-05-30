@@ -16,5 +16,3 @@ export const initTable = () => {
     table.string('hostId').notNullable();
   });
 };
-
-export const reseed = () => {};

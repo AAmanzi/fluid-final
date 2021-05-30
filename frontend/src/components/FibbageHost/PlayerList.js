@@ -20,7 +20,7 @@ const PlayerList = () => {
     <PlayerListContainer>
       <Players>
         {players.map((player, index) => (
-          <PlayerCard key={index}>
+          <PlayerCard key={player.socketId}>
             <PlayerNumber>{index + 1}</PlayerNumber>
             <PlayerInfo>
               <PlayerName>{player.name}</PlayerName>

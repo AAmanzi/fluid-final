@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import PromptInfo from 'src/components/FibbagePromptInfo';
+import { ButtonSecondary, Input } from 'src/components/styled';
 
-import { PromptContainer, Input, Button } from './index.styled';
+import { PromptContainer } from './index.styled';
 
 const Prompt = ({ prompt, onConfirm }) => {
   const [answer, setAnswer] = useState('');
@@ -19,9 +20,12 @@ const Prompt = ({ prompt, onConfirm }) => {
         onChange={(e) => setAnswer(e.target.value)}
       />
 
-      <Button onClick={() => onConfirm(answer)} disabled={!answer}>
+      <ButtonSecondary
+        color='red'
+        onClick={() => onConfirm(answer)}
+        disabled={!answer}>
         Confirm
-      </Button>
+      </ButtonSecondary>
     </PromptContainer>
   );
 };

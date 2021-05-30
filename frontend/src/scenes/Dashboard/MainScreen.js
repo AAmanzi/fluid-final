@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import { ButtonPrimary, ButtonSecondary, Label, Input } from './index.styled';
+import { ButtonSecondary, Input } from 'src/components/styled';
+
+import { ButtonCreateGame, Label } from './index.styled';
 
 const MainScreen = ({ setSelectGameTypeScreen, joinGame, joinError }) => {
   const [username, setUsername] = useState('');
@@ -36,9 +38,9 @@ const MainScreen = ({ setSelectGameTypeScreen, joinGame, joinError }) => {
 
   return (
     <>
-      <ButtonPrimary onClick={setSelectGameTypeScreen} content='CREATE GAME'>
+      <ButtonCreateGame onClick={setSelectGameTypeScreen} content='CREATE GAME'>
         CREATE GAME
-      </ButtonPrimary>
+      </ButtonCreateGame>
       <div>
         <Label>Room code</Label>
         <Input
@@ -57,7 +59,7 @@ const MainScreen = ({ setSelectGameTypeScreen, joinGame, joinError }) => {
           placeholder='YOUR NAME'
         />
       </div>
-      <ButtonSecondary onClick={handleJoin}>PLAY</ButtonSecondary>
+      <ButtonSecondary onClick={handleJoin}>JOIN GAME</ButtonSecondary>
     </>
   );
 };

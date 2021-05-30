@@ -6,6 +6,7 @@ import { roomTypeEnum } from '../models/Room';
 const handleCreate = (socket, io) => {
   socket.on('host/send/create', async ({ socketId, type }) => {
     const room = await RoomsResolver.mutation.createRoom(type, socketId);
+    let playerSockets = [];
 
     if (!room) {
       socket.emit('host/receive/room-create-error');
@@ -13,7 +14,9 @@ const handleCreate = (socket, io) => {
       return;
     }
 
-    socket.emit('host/receive/room-create-success', room.code);
+    socket.emit('host/receive/room-create-success', {
+      roomCode: room.code,
+    });
 
     switch (room.type) {
       case roomTypeEnum.fibbage:
@@ -23,7 +26,27 @@ const handleCreate = (socket, io) => {
         break;
     }
 
+    socket.on('host/send/player-join', ({ socketId }) => {
+      playerSockets.push(socketId);
+
+      if (playerSockets.length === 2) {
+        const firstPlayerSocket = playerSockets[0];
+
+        io.to(firstPlayerSocket).emit('client/receive/toggle-start-button');
+      }
+    });
+
+    socket.on('host/send/player-disconnect', ({ socketId }) => {
+      playerSockets = playerSockets.filter(
+        (playerSocketId) => playerSocketId !== socketId
+      );
+    });
+
     socket.on('disconnect', async () => {
+      playerSockets.forEach((playerSocketId) => {
+        io.to(playerSocketId).emit('client/receive/host-disconnect');
+      });
+
       await RoomsResolver.mutation.deleteRoom(socketId);
     });
   });
@@ -39,7 +62,9 @@ const handleJoin = (socket, io) => {
       return;
     }
 
-    socket.emit('client/receive/join-success');
+    socket.emit('client/receive/join-success', {
+      roomCode: room.code,
+    });
 
     io.to(room.hostId).emit('host/receive/player-join', {
       name: username,
@@ -54,8 +79,14 @@ const handleJoin = (socket, io) => {
         break;
     }
 
+    socket.on('client/send/start-game', () => {
+      io.to(room.hostId).emit('host/receive/start-game');
+    });
+
     socket.on('disconnect', () => {
-      io.to(room.hostId).emit('host/receive/player-disconnect', { socketId });
+      io.to(room.hostId).emit('host/receive/player-disconnect', {
+        socketId,
+      });
     });
   });
 };

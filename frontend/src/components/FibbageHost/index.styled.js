@@ -214,20 +214,9 @@ export const WaitingContainer = styled.div`
   align-items: center;
 `;
 
-export const ResetButton = styled.button`
-  background-color: #ee5d6c;
-  color: #ffffff;
-  border-radius: 10px;
-  margin: auto;
-  font-size: 36px;
-  opacity: 0.6;
-  margin-top: 12px;
-  margin-bottom: 12px;
-`;
-
 export const RoomCode = styled.h3`
   font-family: 'Annie';
-  color: #ffffff;
+  color: #282856;
   font-size: 54px;
   position: absolute;
   top: calc(50% - 26px);
@@ -245,23 +234,5 @@ export const NumberContainer = styled.div`
 
   h1 {
     font-size: 200px !important;
-  }
-`;
-
-export const ButtonNext = styled.button`
-  transition: background 0.2s ease-in-out, transform 0.2s ease-in-out,
-    color 0.2s ease-in-out;
-  background-color: #ee5d6c99;
-  color: #28285699;
-  border-radius: 10px;
-  font-size: 18px;
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-
-  :hover {
-    background-color: #ee5d6cb3;
-    color: #282856b3;
-    transform: scale(1.1);
   }
 `;

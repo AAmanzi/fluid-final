@@ -6,7 +6,3 @@ export const initTables = async () => {
 
   await rooms.initTable();
 };
-
-export const reseed = () => {
-  rooms.reseed();
-};

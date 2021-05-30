@@ -20,45 +20,45 @@ const StartScreen = () => {
   const [createdRoomCode, setCreatedRoomCode] = useState(null);
 
   useEffect(() => {
-    socket.on('join/success', (code) => {
-      setJoinedRoomCode(code);
+    socket.on('client/receive/join-success', ({ roomCode }) => {
+      setJoinedRoomCode(roomCode);
     });
 
     return () => {
-      socket.off('join/success');
+      socket.off('client/receive/join-success');
     };
   }, []);
 
   useEffect(() => {
-    socket.on('join/error', () => {
+    socket.on('client/receive/join-error', () => {
       setJoinError(true);
     });
 
     return () => {
-      socket.off('join/error');
+      socket.off('client/receive/join-error');
     };
   }, []);
 
   useEffect(() => {
-    socket.on('create/success', (code) => {
-      setCreatedRoomCode(code);
+    socket.on('host/receive/room-create-success', ({ roomCode }) => {
+      setCreatedRoomCode(roomCode);
     });
 
     return () => {
-      socket.off('create/success');
+      socket.off('host/receive/room-create-success');
     };
   }, []);
 
   const joinGame = (username, roomCode) => {
-    socket.emit('join', {
+    socket.emit('client/send/join', {
       roomCode,
       username,
       socketId: socket.id,
     });
   };
 
-  const handleCreate = (type) => {
-    socket.emit('create', {
+  const handleCreateGame = (type) => {
+    socket.emit('host/send/create', {
       socketId: socket.id,
       type,
     });
@@ -83,7 +83,10 @@ const StartScreen = () => {
   const getContent = () => {
     if (screen === SCREEN.selectGameType) {
       return (
-        <SelectGameTypeScreen goBack={setMainScreen} onSelect={handleCreate} />
+        <SelectGameTypeScreen
+          goBack={setMainScreen}
+          createGame={handleCreateGame}
+        />
       );
     }
 

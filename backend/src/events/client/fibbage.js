@@ -1,5 +1,3 @@
-export const eventName = 'fibbage';
-
 const events = (socket, io, hostId) => {
   socket.on('client/send/answer', ({ answer, socketId }) => {
     console.log('answer', { answer, socketId });

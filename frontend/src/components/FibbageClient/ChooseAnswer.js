@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { ButtonRadio, ButtonSecondary } from '../styled';
 
-import { PromptContainer, Button, ButtonAnswer } from './index.styled';
+import { PromptContainer } from './index.styled';
 
 const ChooseAnswer = ({ answers, onConfirm }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -8,18 +9,19 @@ const ChooseAnswer = ({ answers, onConfirm }) => {
   return (
     <PromptContainer>
       {answers.map((answer) => (
-        <ButtonAnswer
+        <ButtonRadio
           onClick={() => setSelectedAnswer(answer)}
           isSelected={answer.playerId === selectedAnswer.playerId}>
           {answer.label}
-        </ButtonAnswer>
+        </ButtonRadio>
       ))}
 
-      <Button
+      <ButtonSecondary
+        background='red'
         onClick={() => onConfirm(selectedAnswer.label)}
         disabled={!selectedAnswer}>
         Confirm
-      </Button>
+      </ButtonSecondary>
     </PromptContainer>
   );
 };
