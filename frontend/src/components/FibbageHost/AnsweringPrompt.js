@@ -5,9 +5,9 @@ import PromptInfo from 'src/components/FibbagePromptInfo';
 
 import { PromptContainer } from './index.styled';
 
-const Prompt = ({ prompt }) => {
+const AnsweringPrompt = ({ prompt }) => {
   useEffect(() => {
-    socket.emit('host/send/prompt', {
+    socket.emit('host/send/start-answering', {
       prompt,
     });
     // eslint-disable-next-line
@@ -15,11 +15,9 @@ const Prompt = ({ prompt }) => {
 
   return (
     <PromptContainer>
-      <div>
-        <PromptInfo prompt={prompt} />
-      </div>
+      <PromptInfo prompt={prompt} />
     </PromptContainer>
   );
 };
 
-export default Prompt;
+export default AnsweringPrompt;

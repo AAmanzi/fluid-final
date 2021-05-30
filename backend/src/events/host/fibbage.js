@@ -1,13 +1,19 @@
-const events = (socket, io) => {
-  socket.on('host/send/start-answering', ({ players, prompt }) => {
-    players.forEach((player) => {
-      io.to(player.socketId).emit('client/receive/start-answering', { prompt });
+const events = (socket, io, getPlayerSockets) => {
+  socket.on('host/send/start-answering', ({ prompt }) => {
+    const playerSockets = getPlayerSockets();
+
+    playerSockets.forEach((socket) => {
+      io.to(socket).emit('client/receive/start-answering', { prompt });
     });
   });
 
-  socket.on('host/send/start-choosing', ({ players }) => {
-    players.forEach((player) => {
-      io.to(player.socketId).emit('client/receive/start-choosing');
+  socket.on('host/send/start-choosing', ({ answers }) => {
+    const playerSockets = getPlayerSockets();
+
+    console.log({ playerSockets });
+
+    playerSockets.forEach((socket) => {
+      io.to(socket).emit('client/receive/start-choosing', { answers });
     });
   });
 };

@@ -6,7 +6,12 @@ import { roomTypeEnum } from '../models/Room';
 const handleCreate = (socket, io) => {
   socket.on('host/send/create', async ({ socketId, type }) => {
     const room = await RoomsResolver.mutation.createRoom(type, socketId);
+
     let playerSockets = [];
+
+    const getPlayerSockets = () => {
+      return playerSockets;
+    };
 
     if (!room) {
       socket.emit('host/receive/room-create-error');
@@ -20,7 +25,7 @@ const handleCreate = (socket, io) => {
 
     switch (room.type) {
       case roomTypeEnum.fibbage:
-        fibbageHostEvents(socket, io);
+        fibbageHostEvents(socket, io, getPlayerSockets);
         break;
       default:
         break;

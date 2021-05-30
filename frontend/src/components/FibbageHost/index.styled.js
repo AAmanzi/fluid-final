@@ -114,6 +114,8 @@ export const PlayerCard = styled.div`
   &:nth-child(odd) {
     margin-right: 1px;
   }
+
+  ${({ hasAnswered }) => hasAnswered && `background-color: #ee5d6c99;`}
 `;
 
 export const PlayerListContainer = styled.div`

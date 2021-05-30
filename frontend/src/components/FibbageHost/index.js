@@ -5,8 +5,8 @@ import { useFibbageContext } from 'src/providers/fibbage/hooks';
 import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
 import PlayerList from './PlayerList';
-import DisplayResults from './DisplayResults';
-import Prompt from './Prompt';
+import ChoosingAnswers from './ChoosingAnswers';
+import AnsweringPrompt from './AnsweringPrompt';
 import Sidebar from './Sidebar';
 
 import {
@@ -27,28 +27,6 @@ const FibbageHost = ({ roomCode }) => {
     handleNextTurn,
     startGame,
   } = useFibbageContext();
-
-  const showPrompt = currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt;
-
-  const handleEmitChoosing = () => {
-    socket.emit('host/send/start-choosing', { players });
-  };
-
-  const handleEmitAnswering = () => {
-    socket.emit('host/send/start-answering', {
-      players,
-      prompt: currentPrompt,
-    });
-  };
-
-  useEffect(() => {
-    if (currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
-      handleEmitChoosing();
-    } else if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
-      handleEmitAnswering();
-    }
-    // eslint-disable-next-line
-  }, [currentEvent]);
 
   useEffect(() => {
     socket.off('host/receive/player-join');
@@ -99,7 +77,7 @@ const FibbageHost = ({ roomCode }) => {
   useEffect(() => {
     if (
       !!players.length &&
-      !players.some((player) => !player.answer) &&
+      players.every((player) => player.answer !== null) &&
       currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt
     ) {
       handleNextTurn();
@@ -124,11 +102,13 @@ const FibbageHost = ({ roomCode }) => {
       return <HeadingMain>Game over</HeadingMain>;
     }
 
-    if (showPrompt) {
-      return <Prompt prompt={currentPrompt} />;
+    if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
+      return <AnsweringPrompt prompt={currentPrompt} />;
     }
 
-    return <DisplayResults prompt={currentPrompt} />;
+    if (currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
+      return <ChoosingAnswers prompt={currentPrompt} />;
+    }
   };
 
   return (
