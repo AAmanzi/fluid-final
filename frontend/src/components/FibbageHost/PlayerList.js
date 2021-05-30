@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import usePlayers from "services/fibbage/usePlayers";
+import { usePlayers } from 'src/providers/fibbage/hooks';
 
 import {
   PlayerName,
@@ -11,7 +11,7 @@ import {
   PlayerListContainer,
   Players,
   PlayerInfo,
-} from "./index.styled";
+} from './index.styled';
 
 const PlayerList = () => {
   const players = usePlayers();

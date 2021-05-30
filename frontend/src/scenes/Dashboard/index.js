@@ -1,135 +1,107 @@
-import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router";
+import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router';
 
-import useSocket from "services/socket/useSocket";
+import { socket } from 'src/config';
+import LogoIcon from 'src/assets/logo.svg';
 
-import LogoIcon from "assets/logo.svg";
-import BackgroundImage from "assets/background.png";
+import MainScreen from './MainScreen';
+import SelectGameTypeScreen from './SelectGameTypeScreen';
+import { DashboardContainer, Logo, Container } from './index.styled';
 
-import {
-  DashboardContainer,
-  Logo,
-  ButtonCreate,
-  ButtonJoin,
-  Label,
-  Input,
-  Container,
-} from "./index.styled";
+const SCREEN = Object.freeze({
+  main: 'main',
+  selectGameType: 'selectGameType',
+});
 
 const StartScreen = () => {
+  const [screen, setScreen] = useState(SCREEN.main);
   const [joinError, setJoinError] = useState(false);
-  const [joinSuccess, setJoinSuccess] = useState(false);
-  const [username, setUsername] = useState("");
-  const [roomCode, setRoomCode] = useState("");
+  const [joinedRoomCode, setJoinedRoomCode] = useState(null);
   const [createdRoomCode, setCreatedRoomCode] = useState(null);
-  const socket = useSocket();
 
   useEffect(() => {
-    socket.on("join/success", () => {
-      setJoinSuccess(true);
+    socket.on('join/success', (code) => {
+      setJoinedRoomCode(code);
     });
-    // eslint-disable-next-line
+
+    return () => {
+      socket.off('join/success');
+    };
   }, []);
 
   useEffect(() => {
-    socket.on("join/error", () => {
+    socket.on('join/error', () => {
       setJoinError(true);
     });
-    // eslint-disable-next-line
+
+    return () => {
+      socket.off('join/error');
+    };
   }, []);
 
   useEffect(() => {
-    socket.on("create/success", (code) => {
+    socket.on('create/success', (code) => {
       setCreatedRoomCode(code);
     });
-    // eslint-disable-next-line
+
+    return () => {
+      socket.off('create/success');
+    };
   }, []);
 
-  useEffect(() => {
-    return () =>
-      socket.removeAllListeners([
-        "join/success",
-        "join/error",
-        "create/success",
-      ]);
-    // eslint-disable-next-line
-  }, []);
-
-  const handleJoin = () => {
-    socket.emit("join", {
+  const joinGame = (username, roomCode) => {
+    socket.emit('join', {
       roomCode,
       username,
       socketId: socket.id,
     });
   };
 
-  const handleRoomSelect = (value) => {
-    socket.emit("create", {
+  const handleCreate = (type) => {
+    socket.emit('create', {
       socketId: socket.id,
-      type: value,
+      type,
     });
-  };
-
-  const handleSetRoomCode = (e) => {
-    const newRoomCode = e.target.value.toUpperCase();
-
-    if (newRoomCode.length <= 4) {
-      setRoomCode(newRoomCode);
-    }
-  };
-
-  const handleSetUsername = (e) => {
-    const newUsername = e.target.value.toUpperCase();
-
-    if (newUsername.length <= 10) {
-      setUsername(newUsername);
-    }
-  };
-
-  const handleJoinIfEnter = (e) => {
-    if (e.key === "Enter") {
-      handleJoin();
-    }
   };
 
   if (createdRoomCode) {
     return <Redirect to={`/host/${createdRoomCode}`} />;
   }
 
-  if (joinSuccess) {
-    return <Redirect to={`/room/${roomCode}`} />;
+  if (joinedRoomCode) {
+    return <Redirect to={`/room/${joinedRoomCode}`} />;
   }
 
+  const setSelectGameTypeScreen = () => {
+    setScreen(SCREEN.selectGameType);
+  };
+
+  const setMainScreen = () => {
+    setScreen(SCREEN.main);
+  };
+
+  const getContent = () => {
+    if (screen === SCREEN.selectGameType) {
+      return (
+        <SelectGameTypeScreen goBack={setMainScreen} onSelect={handleCreate} />
+      );
+    }
+
+    return (
+      <MainScreen
+        setSelectGameTypeScreen={setSelectGameTypeScreen}
+        joinGame={joinGame}
+        joinError={joinError}
+      />
+    );
+  };
+
   return (
-    <DashboardContainer background={BackgroundImage}>
+    <DashboardContainer>
       <Container>
-        <ButtonCreate
-          onClick={() => handleRoomSelect("FIBBAGE")}
-          content="CREATE GAME"
-        >
-          CREATE GAME
-        </ButtonCreate>
-        <div>
-          <Label>Room code</Label>
-          <Input
-            value={roomCode}
-            onChange={handleSetRoomCode}
-            placeholder="4-LETTER CODE"
-          />
-          {joinError && <p>Invalid room code!</p>}
-        </div>
-        <div>
-          <Label>Name</Label>
-          <Input
-            value={username}
-            onChange={handleSetUsername}
-            onKeyDown={handleJoinIfEnter}
-            placeholder="YOUR NAME"
-          />
-        </div>
-        <ButtonJoin onClick={handleJoin}>PLAY</ButtonJoin>
+        {getContent()}
+        <Logo src={LogoIcon} alt='Fluid' />
       </Container>
-      <Logo src={LogoIcon} alt="Fluid" />
     </DashboardContainer>
   );
 };

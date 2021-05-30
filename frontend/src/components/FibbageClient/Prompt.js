@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import PromptInfo from "../FibbagePromptInfo";
+import PromptInfo from 'src/components/FibbagePromptInfo';
 
-import { PromptContainer, Input, Button } from "./index.styled";
+import { PromptContainer, Input, Button } from './index.styled';
 
 const Prompt = ({ prompt, onConfirm }) => {
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState('');
 
   return (
     <PromptContainer>
@@ -14,7 +14,7 @@ const Prompt = ({ prompt, onConfirm }) => {
       </div>
 
       <Input
-        type="text"
+        type='text'
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />

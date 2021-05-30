@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const HeadingSecondary = styled.h2`
   font-size: 62px;

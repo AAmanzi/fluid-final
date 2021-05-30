@@ -1,7 +1,7 @@
-require("dotenv").config();
+require('dotenv').config();
 
 module.exports = {
-  client: "pg",
+  client: 'pg',
   connection: process.env.DATABASE_URL || {
     host: process.env.POSTGRES_HOST,
     port: 5432,
@@ -10,6 +10,6 @@ module.exports = {
     password: process.env.POSTGRES_PASSWORD,
   },
   migrations: {
-    tableName: "migrations",
+    tableName: 'migrations',
   },
 };

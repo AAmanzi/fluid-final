@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
-import useSocket from "services/socket/useSocket";
+import React, { useState, useEffect } from 'react';
 
-import Prompt from "./Prompt";
-import ChooseAnswer from "./ChooseAnswer";
+import { socket } from 'src/config';
 
-import BackgroundImageMobile from "assets/background-phone.png";
+import Prompt from './Prompt';
+import ChooseAnswer from './ChooseAnswer';
 
-import { Screen, GameContainer, Text } from "./index.styled";
+import { Screen, GameContainer, Text } from './index.styled';
 
 const FibbageClient = () => {
-  const socket = useSocket();
-
   const [isStarted, setIsStarted] = useState(false);
   const [prompt, setPrompt] = useState(null);
   const [answers, setAnswers] = useState(null);
 
   useEffect(() => {
-    socket.on("client/receive/skipped", () => {
+    socket.on('client/receive/skipped', () => {
       setPrompt(null);
       setAnswers(null);
     });
@@ -25,7 +22,7 @@ const FibbageClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("client/receive/start-answering", ({ prompt }) => {
+    socket.on('client/receive/start-answering', ({ prompt }) => {
       setPrompt(prompt);
 
       if (!isStarted) {
@@ -37,7 +34,7 @@ const FibbageClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("client/receive/start-choosing", ({ answers }) => {
+    socket.on('client/receive/start-choosing', ({ answers }) => {
       setAnswers(answers);
     });
 
@@ -45,18 +42,18 @@ const FibbageClient = () => {
   }, []);
 
   const handleEmitAnswer = (answer) => {
-    socket.emit("client/send/answer", { answer, socketId: socket.id });
+    socket.emit('client/send/answer', { answer, socketId: socket.id });
     setPrompt(null);
   };
 
   const handleEmitChoice = (choice) => {
-    socket.emit("client/send/choice", { choice, socketId: socket.id });
+    socket.emit('client/send/choice', { choice, socketId: socket.id });
     setAnswers(null);
   };
 
   if (!isStarted) {
     return (
-      <Screen background={BackgroundImageMobile}>
+      <Screen>
         <GameContainer>
           <Text>Waiting for players to join</Text>
         </GameContainer>
@@ -65,7 +62,7 @@ const FibbageClient = () => {
   }
 
   return (
-    <Screen background={BackgroundImageMobile}>
+    <Screen>
       <GameContainer>
         {prompt && <Prompt prompt={prompt} onConfirm={handleEmitAnswer} />}
 

@@ -1,7 +1,7 @@
-import Knex from "knex";
-import { initTables, reseed } from "./tables";
+import Knex from 'knex';
+import { initTables, reseed } from './tables';
 
-const config = require("../../knexfile.js");
+const config = require('../../knexfile.js');
 
 const client = Knex(config);
 
@@ -12,7 +12,7 @@ export const initDatabase = async () => {
   return;
 
   await initTables();
-  console.log("Purged DB");
+  console.log('Purged DB');
   await reseed();
-  console.log("Reseeded data");
+  console.log('Reseeded data');
 };

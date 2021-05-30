@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const appearAnimation = keyframes`
   0% {
@@ -18,13 +18,12 @@ export const Screen = styled.div`
   position: relative;
 
   ::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    ${({ background }) => background && `background-image: url(${background});`}
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0.5;
@@ -58,7 +57,7 @@ export const ButtonAnswer = styled.button`
   border: 2px solid #ffffff;
   transition: border 0.2s ease-in-out;
 
-  ${({ isSelected }) => isSelected && "border: 2px solid #ee5d6c;"};
+  ${({ isSelected }) => isSelected && 'border: 2px solid #ee5d6c;'};
 `;
 
 export const PromptContainer = styled.div`

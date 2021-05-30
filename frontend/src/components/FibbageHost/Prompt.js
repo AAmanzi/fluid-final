@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
-import useSocket from "services/socket/useSocket";
+import React, { useEffect } from 'react';
 
-import PromptInfo from "components/FibbagePromptInfo";
+import { socket } from 'src/config';
+import PromptInfo from 'src/components/FibbagePromptInfo';
 
-import { PromptContainer } from "./index.styled";
+import { PromptContainer } from './index.styled';
 
 const Prompt = ({ prompt }) => {
-  const socket = useSocket();
-
   useEffect(() => {
-    socket.emit("host/send/prompt", {
+    socket.emit('host/send/prompt', {
       prompt,
     });
     // eslint-disable-next-line

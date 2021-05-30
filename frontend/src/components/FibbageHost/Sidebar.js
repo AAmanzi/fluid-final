@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { SidebarStyled, RoomCode } from "./index.styled";
+import { SidebarStyled, RoomCode } from './index.styled';
 
 const Sidebar = ({ roomCode }) => {
   return (

@@ -1,9 +1,9 @@
-import React from "react";
-import { useHistory, Redirect } from "react-router-dom";
-import { dev, playersDevMode } from "config.js";
+import React from 'react';
+import { useHistory, Redirect } from 'react-router-dom';
 
-import FibbageHost from "components/FibbageHost";
-import FibbageProvider from "services/fibbage";
+import { dev, playersDevMode } from 'src/config';
+import FibbageProvider from 'src/providers/fibbage';
+import FibbageHost from 'src/components/FibbageHost';
 
 const RoomHost = ({
   match: {
@@ -12,8 +12,8 @@ const RoomHost = ({
 }) => {
   const history = useHistory();
 
-  if ((!dev || !playersDevMode) && history.action !== "REPLACE") {
-    return <Redirect to="/" />;
+  if ((!dev || !playersDevMode) && history.action !== 'REPLACE') {
+    return <Redirect to='/' />;
   }
 
   return (

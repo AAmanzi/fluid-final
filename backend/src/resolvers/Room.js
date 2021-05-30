@@ -1,10 +1,10 @@
-import { rooms, roomTypeEnum } from "../models/Room";
-import { getRandomString } from "../utils/string";
+import { rooms, roomTypeEnum } from '../models/Room';
+import { getRandomString } from '../utils/string';
 
 const RoomsResolver = {
   query: {
     room: async (roomCode) => {
-      const [room] = await rooms().select("*").where("code", roomCode);
+      const [room] = await rooms().select('*').where('code', roomCode);
 
       return room;
     },
@@ -33,7 +33,7 @@ const RoomsResolver = {
           type,
           hostId,
         })
-        .returning("*");
+        .returning('*');
 
       return room;
     },
@@ -42,7 +42,7 @@ const RoomsResolver = {
         return;
       }
 
-      await rooms().where("hostId", hostId).del();
+      await rooms().where('hostId', hostId).del();
 
       return {
         ok: true,

@@ -1,19 +1,14 @@
-import React from "react";
-import dotenv from "dotenv";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import SocketProvider from "services/socket";
+import React from 'react';
+import dotenv from 'dotenv';
+import ReactDOM from 'react-dom';
+
+import App from './App';
 
 dotenv.config();
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <SocketProvider>
-        <App />
-      </SocketProvider>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

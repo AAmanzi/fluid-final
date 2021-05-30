@@ -1,18 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
-import { FibbageContext } from "services/fibbage";
+import React, { useState, useEffect } from 'react';
 
-import useSocket from "services/socket/useSocket";
+import { socket } from 'src/config';
+import {
+  useFibbageContext,
+  useGame,
+  usePlayers,
+} from 'src/providers/fibbage/hooks';
+import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
-import usePlayers from "services/fibbage/usePlayers";
-import useGame from "services/fibbage/useGame";
-import eventTypes from "services/fibbage/eventTypes.const";
-
-import PlayerList from "./PlayerList";
-import DisplayResults from "./DisplayResults";
-import Prompt from "./Prompt";
-import Sidebar from "./Sidebar";
-
-import BackgroundImage from "assets/background.png";
+import PlayerList from './PlayerList';
+import DisplayResults from './DisplayResults';
+import Prompt from './Prompt';
+import Sidebar from './Sidebar';
 
 import {
   Screen,
@@ -21,17 +20,16 @@ import {
   Text,
   WaitingContainer,
   ButtonStart,
-} from "./index.styled";
+} from './index.styled';
 
 const FibbageHost = ({ roomCode }) => {
-  const socket = useSocket();
   const {
     state: { currentEvent, displayedPrompt },
     addPlayer,
     removePlayer,
     setPlayerAnswer,
     handleNextTurn,
-  } = useContext(FibbageContext);
+  } = useFibbageContext();
   const players = usePlayers();
   const { gameStart, gameEnd, startGame } = useGame();
   const [showPrompt, setShowPrompt] = useState(false);
@@ -41,18 +39,18 @@ const FibbageHost = ({ roomCode }) => {
   };
 
   const handleEmitChoosing = () => {
-    socket.emit("host/send/start-choosing", { players });
+    socket.emit('host/send/start-choosing', { players });
   };
 
   const handleEmitAnswering = () => {
-    socket.emit("host/send/start-answering", {
+    socket.emit('host/send/start-answering', {
       players,
       prompt: displayedPrompt,
     });
   };
 
   useEffect(() => {
-    if (currentEvent === eventTypes.CHOOSING_ANSWERS) {
+    if (currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
       setShowPrompt(false);
       handleEmitChoosing();
     } else {
@@ -63,28 +61,28 @@ const FibbageHost = ({ roomCode }) => {
   }, [currentEvent]);
 
   useEffect(() => {
-    socket.on("client/join", ({ name, socketId }) => {
+    socket.on('client/join', ({ name, socketId }) => {
       addPlayer({ name, socketId });
     });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("client/disconnect", ({ socketId }) => {
+    socket.on('client/disconnect', ({ socketId }) => {
       removePlayer(socketId);
     });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("host/receive/game-start", () => {
+    socket.on('host/receive/game-start', () => {
       handleStartGame();
     });
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    socket.on("host/receive/answer", ({ answer, socketId }) => {
+    socket.on('host/receive/answer', ({ answer, socketId }) => {
       setPlayerAnswer(answer, socketId);
     });
     // eslint-disable-next-line
@@ -94,14 +92,14 @@ const FibbageHost = ({ roomCode }) => {
     if (
       !!players.length &&
       !players.some((player) => !player.answer) &&
-      currentEvent === eventTypes.ANSWERING_PROMPT
+      currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt
     ) {
       handleNextTurn();
     }
   }, [players, handleNextTurn, currentEvent]);
 
   return (
-    <Screen background={BackgroundImage}>
+    <Screen>
       <GameContainer>
         <PlayerList />
 
@@ -116,7 +114,7 @@ const FibbageHost = ({ roomCode }) => {
           <WaitingContainer>
             <Text>Waiting for players to join</Text>
             {players?.length > 1 && (
-              <ButtonStart onClick={handleStartGame} content="START GAME">
+              <ButtonStart onClick={handleStartGame} content='START GAME'>
                 START GAME
               </ButtonStart>
             )}

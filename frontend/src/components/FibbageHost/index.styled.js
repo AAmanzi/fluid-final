@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const appearAnimation = keyframes`
   0% {
@@ -17,13 +17,12 @@ export const Screen = styled.div`
   position: relative;
 
   ::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    ${({ background }) => background && `background-image: url(${background});`}
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0.5;
@@ -199,7 +198,7 @@ export const CounterList = styled.div`
   padding: 4px 36px;
   min-height: 10px;
 
-  ${({ hidden }) => hidden && "background-color: transparent;"}
+  ${({ hidden }) => hidden && 'background-color: transparent;'}
 `;
 
 export const Counter = styled.div`
@@ -227,7 +226,7 @@ export const ResetButton = styled.button`
 `;
 
 export const RoomCode = styled.h3`
-  font-family: "Annie";
+  font-family: 'Annie';
   color: #ffffff;
   font-size: 54px;
   position: absolute;

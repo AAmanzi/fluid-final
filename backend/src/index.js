@@ -1,11 +1,11 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import http from "http";
-import socketIo from "socket.io";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import http from 'http';
+import socketIo from 'socket.io';
 
-import events from "./events";
-import { initDatabase } from "./database";
+import events from './events';
+import { initDatabase } from './database';
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 export const io = socketIo(server);
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
   events(socket, io);
 });
 

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Container, HeadingSecondary, Text, TextAlt } from "./index.styled";
+import { Container, HeadingSecondary, Text, TextAlt } from './index.styled';
 
 const FibbagePromptInfo = ({
   prompt,

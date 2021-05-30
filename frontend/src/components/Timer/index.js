@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import useInterval from "services/hooks/useInterval";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-import styled from "styled-components";
+import { useInterval } from 'src/hooks/useInterval';
 
 const Text = styled.h1`
   font-size: 50px;

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const DashboardContainer = styled.div`
   & p {
@@ -15,20 +15,6 @@ export const DashboardContainer = styled.div`
   height: 100vh;
 
   position: relative;
-
-  ::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    ${({ background }) => background && `background-image: url(${background});`}
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0.8;
-    z-index: -1;
-  }
 `;
 
 export const Container = styled.div`
@@ -40,14 +26,14 @@ export const Logo = styled.img`
   bottom: 80px;
   left: 30px;
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 768px) {
     bottom: 20px;
     left: initial;
     height: 100px;
   }
 `;
 
-export const ButtonCreate = styled.button`
+export const ButtonPrimary = styled.button`
   margin: 4px;
   background-color: #635e5e99;
   color: transparent;
@@ -79,12 +65,12 @@ export const ButtonCreate = styled.button`
     border-radius: 10px;
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 `;
 
-export const ButtonJoin = styled.button`
+export const ButtonSecondary = styled.button`
   font-size: 52px;
   padding: 0 18px;
   border-radius: 20px;
@@ -92,7 +78,7 @@ export const ButtonJoin = styled.button`
 `;
 
 export const Label = styled.p`
-  font-family: "Annie";
+  font-family: 'Annie';
   font-size: 60px;
   margin: 0;
   line-height: 60px;

@@ -1,19 +1,19 @@
-import fibbageHostEvents from "./host/fibbage";
-import fibbageClientEvents from "./client/fibbage";
-import RoomsResolver from "../resolvers/Room";
-import { roomTypeEnum } from "../models/Room";
+import fibbageHostEvents from './host/fibbage';
+import fibbageClientEvents from './client/fibbage';
+import RoomsResolver from '../resolvers/Room';
+import { roomTypeEnum } from '../models/Room';
 
 const handleCreate = (socket, io) => {
-  socket.on("host/send/create", async ({ socketId, type }) => {
+  socket.on('host/send/create', async ({ socketId, type }) => {
     const room = await RoomsResolver.mutation.createRoom(type, socketId);
 
     if (!room) {
-      socket.emit("host/receive/room-create-error");
+      socket.emit('host/receive/room-create-error');
 
       return;
     }
 
-    socket.emit("host/receive/room-create-success", room.code);
+    socket.emit('host/receive/room-create-success', room.code);
 
     switch (room.type) {
       case roomTypeEnum.fibbage:
@@ -23,25 +23,25 @@ const handleCreate = (socket, io) => {
         break;
     }
 
-    socket.on("disconnect", async () => {
+    socket.on('disconnect', async () => {
       await RoomsResolver.mutation.deleteRoom(socketId);
     });
   });
 };
 
 const handleJoin = (socket, io) => {
-  socket.on("client/send/join", async ({ roomCode, username, socketId }) => {
+  socket.on('client/send/join', async ({ roomCode, username, socketId }) => {
     const room = await RoomsResolver.query.room(roomCode);
 
     if (!room) {
-      socket.emit("client/receive/join-error");
+      socket.emit('client/receive/join-error');
 
       return;
     }
 
-    socket.emit("client/receive/join-success");
+    socket.emit('client/receive/join-success');
 
-    io.to(room.hostId).emit("host/receive/player-join", {
+    io.to(room.hostId).emit('host/receive/player-join', {
       name: username,
       socketId,
     });
@@ -54,8 +54,8 @@ const handleJoin = (socket, io) => {
         break;
     }
 
-    socket.on("disconnect", () => {
-      io.to(room.hostId).emit("host/receive/player-disconnect", { socketId });
+    socket.on('disconnect', () => {
+      io.to(room.hostId).emit('host/receive/player-disconnect', { socketId });
     });
   });
 };
