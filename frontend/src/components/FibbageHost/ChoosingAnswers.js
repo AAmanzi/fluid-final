@@ -1,18 +1,32 @@
 import React, { useEffect } from 'react';
 
-import PromptInfo from 'src/components/FibbagePromptInfo';
 import { socket } from 'src/config';
-import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
 import { shuffle } from 'src/utils/array';
+import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
+import PromptInfo from 'src/components/FibbagePromptInfo';
 
-import { AnswersContainer, AnswerTag, DisplayContainer } from './index.styled';
+import {
+  AnswersContainer,
+  AnswerTagContainer,
+  AnswerTagValue,
+  DisplayContainer,
+} from './index.styled';
 
 const ChoosingAnswers = () => {
   const currentPrompt = useCurrentPrompt();
   const players = usePlayers();
 
-  const playerAnswers = players.map((player) => player.answer);
-  const answers = shuffle([...playerAnswers, currentPrompt.answer]);
+  const playerAnswers = players.map((player) => ({
+    playerId: player.socketId,
+    value: player.answer,
+  }));
+  const answers = shuffle([
+    ...playerAnswers,
+    {
+      playerId: 'correct',
+      value: currentPrompt.answer,
+    },
+  ]);
 
   useEffect(() => {
     socket.emit('host/send/start-choosing', { answers });
@@ -24,7 +38,9 @@ const ChoosingAnswers = () => {
       <PromptInfo prompt={currentPrompt} hideTitle hideDescription />
       <AnswersContainer>
         {answers.map((answer, index) => (
-          <AnswerTag key={index}>{answer}</AnswerTag>
+          <AnswerTagContainer key={index}>
+            <AnswerTagValue>{answer.value}</AnswerTagValue>
+          </AnswerTagContainer>
         ))}
       </AnswersContainer>
     </DisplayContainer>

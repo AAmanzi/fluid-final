@@ -4,7 +4,7 @@ import { socket } from 'src/config';
 import { useCurrentPrompt } from 'src/providers/fibbage/hooks';
 import PromptInfo from 'src/components/FibbagePromptInfo';
 
-import { PromptContainer } from './index.styled';
+import { DisplayContainer } from './index.styled';
 
 const AnsweringPrompt = () => {
   const currentPrompt = useCurrentPrompt();
@@ -16,9 +16,9 @@ const AnsweringPrompt = () => {
   }, [currentPrompt]);
 
   return (
-    <PromptContainer>
+    <DisplayContainer>
       <PromptInfo prompt={currentPrompt} />
-    </PromptContainer>
+    </DisplayContainer>
   );
 };
 

@@ -12,7 +12,7 @@ import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 const FibbageClient = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [isFirstPlayer, setIsFirstPlayer] = useState(false);
-  const [isWaitingOthers, setIsWaitingOthers] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const [prompt, setPrompt] = useState(null);
   const [answers, setAnswers] = useState(null);
@@ -44,7 +44,7 @@ const FibbageClient = () => {
     socket.on('client/receive/start-answering', ({ prompt }) => {
       setCurrentEvent(FIBBAGE_EVENT_TYPE.answeringPrompt);
       setPrompt(prompt);
-      setIsWaitingOthers(false);
+      setIsWaiting(false);
 
       if (!isStarted) {
         setIsStarted(true);
@@ -59,8 +59,13 @@ const FibbageClient = () => {
   useEffect(() => {
     socket.on('client/receive/start-choosing', ({ answers }) => {
       setCurrentEvent(FIBBAGE_EVENT_TYPE.choosingAnswers);
-      setAnswers(answers);
-      setIsWaitingOthers(false);
+
+      const availableAnswers = answers.filter(
+        (answer) => answer.playerId !== socket.id
+      );
+
+      setAnswers(availableAnswers);
+      setIsWaiting(false);
     });
 
     return () => {
@@ -74,12 +79,12 @@ const FibbageClient = () => {
 
   const onAnswerConfirm = () => {
     setPrompt(null);
-    setIsWaitingOthers(true);
+    setIsWaiting(true);
   };
 
   const onChoiceConfirm = () => {
     setAnswers(null);
-    setIsWaitingOthers(true);
+    setIsWaiting(true);
   };
 
   const getContent = () => {
@@ -96,7 +101,7 @@ const FibbageClient = () => {
       );
     }
 
-    if (isWaitingOthers) {
+    if (isWaiting) {
       return <Text>Sit back and relax</Text>;
     }
 

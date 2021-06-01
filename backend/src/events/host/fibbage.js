@@ -10,8 +10,6 @@ const events = (socket, io, getPlayerSockets) => {
   socket.on('host/send/start-choosing', ({ answers }) => {
     const playerSockets = getPlayerSockets();
 
-    console.log({ playerSockets });
-
     playerSockets.forEach((socket) => {
       io.to(socket).emit('client/receive/start-choosing', { answers });
     });

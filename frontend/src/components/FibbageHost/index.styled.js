@@ -1,10 +1,10 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const appearAnimation = keyframes`
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 `;
@@ -15,19 +15,6 @@ export const Screen = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-
-  ::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0.5;
-    z-index: -1;
-  }
 `;
 
 export const GameContainer = styled.div`
@@ -80,6 +67,7 @@ export const ButtonStart = styled.button`
 
 export const DisplayContainer = styled.div`
   animation: ${appearAnimation} 0.8s ease-in-out;
+  flex-basis: 60%;
 `;
 
 export const Outcome = styled.div`
@@ -125,8 +113,8 @@ export const PlayerListContainer = styled.div`
   padding: 20px;
   padding-left: 0;
   align-self: center;
-  width: 358px;
   height: calc(100vh - 44px);
+  flex-basis: 20%;
 `;
 
 export const Players = styled.div`
@@ -181,12 +169,12 @@ export const PromptContainer = styled.div`
   animation: ${appearAnimation} 0.8s ease-in-out;
 `;
 
-export const SidebarStyled = styled.div`
+export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  min-width: 358px;
+  flex-basis: 20%;
   height: calc(100vh - 44px);
 `;
 
@@ -220,8 +208,6 @@ export const RoomCode = styled.h3`
   font-family: 'Annie';
   color: #282856;
   font-size: 54px;
-  position: absolute;
-  top: calc(50% - 26px);
   margin: 0;
 `;
 
@@ -246,17 +232,87 @@ export const AnswersContainer = styled.div`
   margin-top: 10px;
 `;
 
-export const AnswerTag = styled.div`
-  font-size: 34px;
+export const AnswerTagContainer = styled.div`
   padding: 8px 2px;
   border-radius: 10px;
   margin-bottom: 10px;
-  color: white;
-  background-color: #ee5d6c;
+  border: 2px solid #ee5d6c;
+  background-color: white;
+`;
 
-  width: calc(100% / 3 - 8px);
+export const AnswerTagValue = styled.h2`
+  font-size: 34px;
+  color: #ee5d6c;
+  margin-top: 0;
+  margin-bottom: 0;
+`;
 
-  &:not(:nth-child(3n)) {
-    margin-right: 6px;
+const modalScaleAnimation = keyframes`
+  from {
+    transform: translate(-50%, -50%) scale(0);
   }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+`;
+
+export const AnswerTagContainerAbsolute = styled.div`
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  width: 600px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  ${({ disappearsIn }) =>
+    disappearsIn &&
+    css`
+      animation: ${modalScaleAnimation} 0.4s ease-in-out both,
+        ${modalScaleAnimation} 0.4s ${disappearsIn}ms ease-in-out reverse
+          forwards;
+    `}
+`;
+
+export const AnswerTagPlayersContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  border-top: 2px solid #e5e5e5;
+`;
+
+export const AnswerTagPlayerTag = styled.div`
+  font-size: 34px;
+  padding: 8px 24px;
+  border-radius: 10px;
+  background-color: #ee5d6c;
+  color: white;
+  margin: 5px;
+
+  ${({ delay }) =>
+    delay &&
+    css`
+      animation: ${appearAnimation} 0.5s ${delay}ms ease-in-out;
+      animation-fill-mode: both;
+    `}
+`;
+
+export const AnswerTagPointsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+`;
+
+export const AnswerTagPoint = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ee5d6c;
 `;
