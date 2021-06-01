@@ -25,7 +25,9 @@ const FibbageHost = ({ roomCode }) => {
     addPlayer,
     removePlayer,
     startGame,
-    handleNextTurn,
+    finishAnsweringPrompt,
+    finishChoosingAnswers,
+    finishRound,
     setPlayerAnswer,
     setPlayerChoice,
   } = useFibbageContext();
@@ -93,17 +95,21 @@ const FibbageHost = ({ roomCode }) => {
         currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt &&
         players.every((player) => player.answer !== null)
       ) {
-        handleNextTurn();
+        finishAnsweringPrompt();
       }
+    }
+  }, [players, finishAnsweringPrompt, currentEvent]);
 
+  useEffect(() => {
+    if (!!players.length) {
       if (
         currentEvent === FIBBAGE_EVENT_TYPE.choosingAnswers &&
         players.every((player) => player.choice !== null)
       ) {
-        handleNextTurn();
+        finishChoosingAnswers();
       }
     }
-  }, [players, handleNextTurn, currentEvent]);
+  }, [players, finishChoosingAnswers, currentEvent]);
 
   const getContent = () => {
     if (!gameStart) {
@@ -132,7 +138,7 @@ const FibbageHost = ({ roomCode }) => {
     }
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.displayResults) {
-      return <DisplayResults />;
+      return <DisplayResults onEnd={finishRound} />;
     }
   };
 

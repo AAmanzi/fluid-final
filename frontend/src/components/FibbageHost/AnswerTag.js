@@ -25,7 +25,7 @@ const AnswerTag = ({
   value,
   playerIdsSelected,
   shouldStartDisplayingResults,
-  onDisplayFinish,
+  onEnd,
 }) => {
   const players = usePlayers();
   const [event, setEvent] = useState(EVENT.onlyValue);
@@ -38,10 +38,8 @@ const AnswerTag = ({
       if (shouldStartDisplayingResults) {
         await wait(INITIAL_DELAY);
         setEvent(EVENT.focusedResults);
-        console.log('FOCUS');
 
         await wait(disappearsIn + INITIAL_DELAY / 2);
-        console.log('DISAPPEAR', disappearsIn);
         setEvent(EVENT.valueAndResults);
       }
     };
@@ -51,9 +49,9 @@ const AnswerTag = ({
 
   useEffect(() => {
     if (event === EVENT.valueAndResults) {
-      onDisplayFinish();
+      onEnd();
     }
-  });
+  }, [event, onEnd]);
 
   const playerNamesSelected = playerIdsSelected?.map((playerId) =>
     players.find((player) => player.socketId === playerId)

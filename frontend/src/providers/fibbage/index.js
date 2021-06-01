@@ -6,6 +6,11 @@ import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 import devPrompts from './_prompts.const';
 import prodPrompts from './prompts.const';
 import devPlayers from './_players.const';
+import {
+  getScoreForCorrectAnswer,
+  getScoreForFooling,
+  takeNewPrompt,
+} from './utils';
 
 const initialPlayers = playersDevMode ? devPlayers : [];
 const initialPrompts = promptsDevMode ? devPrompts : prodPrompts;
@@ -17,23 +22,24 @@ const initialState = {
   currentPrompt: null,
   currentEvent: null,
 
+  round: 1,
   gameStart: false,
   gameEnd: false,
 };
 
-const actionType = {
+const actionType = Object.freeze({
   ADD_PLAYER: 'ADD_PLAYER',
   REMOVE_PLAYER: 'REMOVE_PLAYER',
-  START_GAME: 'START_GAME',
-  HANDLE_NEXT_TURN: 'HANDLE_NEXT_TURN',
-  GET_NEW_PROMPT: 'GET_NEW_PROMPT',
+  HANDLE_START_GAME: 'HANDLE_START_GAME',
+  HANDLE_FINISH_ANSWERING_PROMPT: 'HANDLE_FINISH_ANSWERING_PROMPT',
+  HANDLE_FINISH_CHOOSING_ANSWERS: 'HANDLE_FINISH_CHOOSING_ANSWERS',
+  HANDLE_FINISH_ROUND: 'HANDLE_FINISH_ROUND',
   SET_PLAYER_ANSWER: 'SET_PLAYER_ANSWER',
   SET_PLAYER_CHOICE: 'SET_PLAYER_CHOICE',
-};
+});
 
 const reducer = (state = initialState, action) => {
   const prevPlayers = [...state.players];
-  const prevEvent = { ...state }.currentEvent;
 
   switch (action.type) {
     case actionType.ADD_PLAYER:
@@ -42,7 +48,9 @@ const reducer = (state = initialState, action) => {
       );
 
       if (alreadyExists) {
-        return { ...state };
+        return {
+          ...state,
+        };
       }
 
       return {
@@ -50,71 +58,80 @@ const reducer = (state = initialState, action) => {
         players: [...state.players, action.player],
       };
     case actionType.REMOVE_PLAYER:
-      const newPlayersRemove = prevPlayers.filter(
+      const playersAfterRemovePlayer = prevPlayers.filter(
         (player) => player.socketId !== action.socketId
       );
 
       return {
         ...state,
-        players: newPlayersRemove,
+        players: playersAfterRemovePlayer,
       };
-    case actionType.START_GAME:
+    case actionType.HANDLE_START_GAME:
+      const {
+        newPrompt: currentPromptAfterStartGame,
+        newPrompts: promptsAfterStartGame,
+      } = takeNewPrompt(state.prompts);
+
       return {
         ...state,
+
+        prompts: promptsAfterStartGame,
+
+        currentEvent: FIBBAGE_EVENT_TYPE.answeringPrompt,
+        currentPrompt: currentPromptAfterStartGame,
+
         gameStart: true,
       };
-    case actionType.HANDLE_NEXT_TURN:
-      const shouldDrawNewPrompt =
-        prevEvent === null || prevEvent === FIBBAGE_EVENT_TYPE.displayResults;
-
-      const getNewEventType = () => {
-        if (prevEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
-          return FIBBAGE_EVENT_TYPE.choosingAnswers;
-        }
-
-        if (prevEvent === FIBBAGE_EVENT_TYPE.choosingAnswers) {
-          return FIBBAGE_EVENT_TYPE.displayResults;
-        }
-
-        if (prevEvent === FIBBAGE_EVENT_TYPE.displayResults) {
-          return FIBBAGE_EVENT_TYPE.answeringPrompt;
-        }
-
-        return FIBBAGE_EVENT_TYPE.answeringPrompt;
+    case actionType.HANDLE_FINISH_ANSWERING_PROMPT:
+      return {
+        ...state,
+        currentEvent: FIBBAGE_EVENT_TYPE.choosingAnswers,
       };
+    case actionType.HANDLE_FINISH_CHOOSING_ANSWERS:
+      return {
+        ...state,
+        currentEvent: FIBBAGE_EVENT_TYPE.displayResults,
+      };
+    case actionType.HANDLE_FINISH_ROUND:
+      const playersAfterFinishRound = state.players.map((player) => ({
+        ...player,
+      }));
 
-      const newEventType = getNewEventType();
+      playersAfterFinishRound.forEach((player) => {
+        if (player.choice.playerId === 'correct') {
+          player.score += getScoreForCorrectAnswer(state.round);
+        } else {
+          const playerFooledBy = playersAfterFinishRound.find(
+            ({ socketId }) => socketId === player.socketId
+          );
 
-      const newPlayersNextTurn = shouldDrawNewPrompt
-        ? prevPlayers.map((player) => ({
-            ...player,
-            answer: null,
-            choice: null,
-          }))
-        : prevPlayers.map((player) => ({ ...player }));
+          playerFooledBy.score += getScoreForFooling(state.round);
+        }
 
-      if (!shouldDrawNewPrompt) {
-        return {
-          ...state,
-          currentEvent: newEventType,
-          players: newPlayersNextTurn,
-        };
-      }
+        player.choice = null;
+        player.answer = null;
+      });
 
-      const newPromptIndex = Math.floor(Math.random() * state.prompts.length);
-      const newPrompt = { ...state.prompts[newPromptIndex] };
+      const {
+        newPrompt: currentPromptAfterFinishRound,
+        newPrompts: promptsAfterFinishRound,
+      } = takeNewPrompt(state.prompts);
 
       return {
         ...state,
-        currentEvent: newEventType,
-        players: newPlayersNextTurn,
-        currentPrompt: newPrompt,
-        prompts: state.prompts.filter((_, index) => index !== newPromptIndex),
+
+        players: playersAfterFinishRound,
+        prompts: promptsAfterFinishRound,
+
+        currentEvent: FIBBAGE_EVENT_TYPE.answeringPrompt,
+        currentPrompt: currentPromptAfterFinishRound,
+
+        round: state.round + 1,
       };
     case actionType.SET_PLAYER_ANSWER:
-      const newPlayersAnswer = [...prevPlayers];
+      const playersAfterSetAnswer = [...prevPlayers];
 
-      const playerToEditAnswer = newPlayersAnswer.find(
+      const playerToEditAnswer = playersAfterSetAnswer.find(
         (player) => player.socketId === action.socketId
       );
 
@@ -122,12 +139,12 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        players: newPlayersAnswer,
+        players: playersAfterSetAnswer,
       };
     case actionType.SET_PLAYER_CHOICE:
-      const newPlayersChoice = [...prevPlayers];
+      const playersAfterSetChoice = [...prevPlayers];
 
-      const playerToEditChoice = newPlayersChoice.find(
+      const playerToEditChoice = playersAfterSetChoice.find(
         (player) => player.socketId === action.socketId
       );
 
@@ -135,7 +152,7 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        players: newPlayersChoice,
+        players: playersAfterSetChoice,
       };
     default:
       return { ...state };
@@ -147,7 +164,9 @@ export const FibbageContext = React.createContext({
   addPlayer: () => {},
   removePlayer: () => {},
   startGame: () => {},
-  handleNextTurn: () => {},
+  finishAnsweringPrompt: () => {},
+  finishChoosingAnswers: () => {},
+  finishRound: () => {},
   setPlayerAnswer: () => {},
   setPlayerChoice: () => {},
 });
@@ -168,12 +187,19 @@ const FibbageProvider = ({ children }) => {
   };
 
   const startGame = () => {
-    dispatch({ type: actionType.START_GAME });
-    dispatch({ type: actionType.HANDLE_NEXT_TURN });
+    dispatch({ type: actionType.HANDLE_START_GAME });
   };
 
-  const handleNextTurn = () => {
-    dispatch({ type: actionType.HANDLE_NEXT_TURN });
+  const finishAnsweringPrompt = () => {
+    dispatch({ type: actionType.HANDLE_FINISH_ANSWERING_PROMPT });
+  };
+
+  const finishChoosingAnswers = () => {
+    dispatch({ type: actionType.HANDLE_FINISH_CHOOSING_ANSWERS });
+  };
+
+  const finishRound = () => {
+    dispatch({ type: actionType.HANDLE_FINISH_ROUND });
   };
 
   const setPlayerAnswer = (answer, socketId) => {
@@ -189,7 +215,9 @@ const FibbageProvider = ({ children }) => {
     addPlayer,
     removePlayer,
     startGame,
-    handleNextTurn,
+    finishAnsweringPrompt,
+    finishChoosingAnswers,
+    finishRound,
     setPlayerAnswer,
     setPlayerChoice,
   };

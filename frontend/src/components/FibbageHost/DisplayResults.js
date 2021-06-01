@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { groupBy, shuffle } from 'src/utils/array';
 import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
@@ -7,7 +7,7 @@ import PromptInfo from 'src/components/FibbagePromptInfo';
 import AnswerTag from './AnswerTag';
 import { AnswersContainer, DisplayContainer } from './index.styled';
 
-const DisplayResults = () => {
+const DisplayResults = ({ onEnd }) => {
   const currentPrompt = useCurrentPrompt();
   const players = usePlayers();
 
@@ -58,17 +58,23 @@ const DisplayResults = () => {
     return answer.playerId === currentFocusedKey;
   };
 
-  const getNextFocusedChoiceIndex = () => {
-    if (currentFocusedChoiceIndex < orderedKeys.length - 1) {
-      setCurrentFocusedChoiceIndex((prev) => prev + 1);
-    }
-  };
+  const getNextFocusedChoiceIndex = useCallback(() => {
+    setCurrentFocusedChoiceIndex((prev) => {
+      if (prev < orderedKeys.length - 1) {
+        return prev + 1;
+      }
+
+      onEnd();
+
+      return prev;
+    });
+  }, [orderedKeys.length, onEnd]);
 
   return (
     <DisplayContainer>
       <PromptInfo prompt={currentPrompt} hideTitle hideDescription />
       <AnswersContainer>
-        {shuffledAnswers.map((answer) => (
+        {shuffledAnswers.map((answer, index) => (
           <AnswerTag
             key={answer.playerId}
             value={answer.value}
@@ -76,7 +82,7 @@ const DisplayResults = () => {
             shouldStartDisplayingResults={getShouldStartDisplayingResults(
               answer
             )}
-            onDisplayFinish={getNextFocusedChoiceIndex}
+            onEnd={getNextFocusedChoiceIndex}
           />
         ))}
       </AnswersContainer>
