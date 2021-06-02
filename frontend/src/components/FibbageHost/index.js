@@ -1,27 +1,26 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { socket } from 'src/config';
-import { useFibbageContext } from 'src/providers/fibbage/hooks';
+import { socket, fibbageMaxPlayers } from 'src/config';
+import { useFibbageContext } from 'src/providers/fibbage';
 import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
 import PlayerList from './PlayerList';
-import ChoosingAnswers from './ChoosingAnswers';
-import AnsweringPrompt from './AnsweringPrompt';
 import Sidebar from './Sidebar';
 
-import {
-  Screen,
-  GameContainer,
-  HeadingMain,
-  Text,
-  WaitingContainer,
-  ButtonStart,
-} from './index.styled';
+import NotStarted from './NotStarted';
+import ChoosingAnswers from './ChoosingAnswers';
+import AnsweringPrompt from './AnsweringPrompt';
 import DisplayResults from './DisplayResults';
+import GameOver from './GameOver';
 
-const FibbageHost = ({ roomCode }) => {
+import { Screen, GameContainer } from './index.styled';
+
+const FibbageHost = () => {
+  const { roomCode } = useParams();
+
   const {
-    state: { currentEvent, gameStart, gameEnd, players },
+    state: { currentEvent, players },
     addPlayer,
     removePlayer,
     startGame,
@@ -35,6 +34,18 @@ const FibbageHost = ({ roomCode }) => {
   useEffect(() => {
     socket.off('host/receive/player-join');
     socket.on('host/receive/player-join', ({ name, socketId }) => {
+      if (currentEvent !== FIBBAGE_EVENT_TYPE.notStarted) {
+        socket.emit('host/send/game-started', { socketId });
+
+        return;
+      }
+
+      if (players.length === fibbageMaxPlayers) {
+        socket.emit('host/send/room-full', { socketId });
+
+        return;
+      }
+
       socket.emit('host/send/player-join', { socketId });
       addPlayer({ name, socketId });
     });
@@ -42,7 +53,7 @@ const FibbageHost = ({ roomCode }) => {
     return () => {
       socket.off('host/receive/player-join');
     };
-  }, [addPlayer]);
+  }, [addPlayer, currentEvent, players.length]);
 
   useEffect(() => {
     socket.off('host/receive/player-disconnect');
@@ -112,21 +123,8 @@ const FibbageHost = ({ roomCode }) => {
   }, [players, finishChoosingAnswers, currentEvent]);
 
   const getContent = () => {
-    if (!gameStart) {
-      return (
-        <WaitingContainer>
-          <Text>Waiting for players to join</Text>
-          {players?.length > 1 && (
-            <ButtonStart onClick={startGame} content='START GAME'>
-              START GAME
-            </ButtonStart>
-          )}
-        </WaitingContainer>
-      );
-    }
-
-    if (gameEnd) {
-      return <HeadingMain>Game over</HeadingMain>;
+    if (currentEvent === FIBBAGE_EVENT_TYPE.notStarted) {
+      return <NotStarted />;
     }
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {
@@ -139,6 +137,10 @@ const FibbageHost = ({ roomCode }) => {
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.displayResults) {
       return <DisplayResults onEnd={finishRound} />;
+    }
+
+    if (currentEvent === FIBBAGE_EVENT_TYPE.gameOver) {
+      return <GameOver />;
     }
   };
 

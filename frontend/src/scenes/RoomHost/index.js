@@ -5,11 +5,7 @@ import { dev, playersDevMode } from 'src/config';
 import FibbageProvider from 'src/providers/fibbage';
 import FibbageHost from 'src/components/FibbageHost';
 
-const RoomHost = ({
-  match: {
-    params: { roomCode },
-  },
-}) => {
+const RoomHost = () => {
   const history = useHistory();
 
   if ((!dev || !playersDevMode) && history.action !== 'REPLACE') {
@@ -18,7 +14,7 @@ const RoomHost = ({
 
   return (
     <FibbageProvider>
-      <FibbageHost roomCode={roomCode} />
+      <FibbageHost />
     </FibbageProvider>
   );
 };

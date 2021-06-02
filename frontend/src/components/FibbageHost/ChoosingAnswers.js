@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { socket } from 'src/config';
 import { shuffle } from 'src/utils/array';
-import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
+import { useFibbageContext } from 'src/providers/fibbage';
 import PromptInfo from 'src/components/FibbagePromptInfo';
 
 import {
@@ -13,8 +13,9 @@ import {
 } from './index.styled';
 
 const ChoosingAnswers = () => {
-  const currentPrompt = useCurrentPrompt();
-  const players = usePlayers();
+  const {
+    state: { players, currentPrompt },
+  } = useFibbageContext();
 
   const playerAnswers = players.map((player) => ({
     playerId: player.socketId,

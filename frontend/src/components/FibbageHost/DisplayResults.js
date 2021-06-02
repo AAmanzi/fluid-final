@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { groupBy, shuffle } from 'src/utils/array';
-import { useCurrentPrompt, usePlayers } from 'src/providers/fibbage/hooks';
+import { useFibbageContext } from 'src/providers/fibbage';
 import PromptInfo from 'src/components/FibbagePromptInfo';
 
 import AnswerTag from './AnswerTag';
 import { AnswersContainer, DisplayContainer } from './index.styled';
 
 const DisplayResults = ({ onEnd }) => {
-  const currentPrompt = useCurrentPrompt();
-  const players = usePlayers();
+  const {
+    state: { players, currentPrompt },
+  } = useFibbageContext();
 
   const [currentFocusedChoiceIndex, setCurrentFocusedChoiceIndex] = useState(0);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);

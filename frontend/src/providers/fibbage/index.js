@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useContext, useReducer } from 'react';
 
 import { playersDevMode, promptsDevMode } from 'src/config';
 import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
@@ -20,11 +20,9 @@ const initialState = {
   prompts: initialPrompts,
 
   currentPrompt: null,
-  currentEvent: null,
+  currentEvent: FIBBAGE_EVENT_TYPE.notStarted,
 
   round: 1,
-  gameStart: false,
-  gameEnd: false,
 };
 
 const actionType = Object.freeze({
@@ -72,15 +70,21 @@ const reducer = (state = initialState, action) => {
         newPrompts: promptsAfterStartGame,
       } = takeNewPrompt(state.prompts);
 
+      const playersAfterStartGame = state.players.map((player) => ({
+        ...player,
+        score: 0,
+        answer: null,
+        choice: null,
+      }));
+
       return {
         ...state,
 
+        players: playersAfterStartGame,
         prompts: promptsAfterStartGame,
 
         currentEvent: FIBBAGE_EVENT_TYPE.answeringPrompt,
         currentPrompt: currentPromptAfterStartGame,
-
-        gameStart: true,
       };
     case actionType.HANDLE_FINISH_ANSWERING_PROMPT:
       return {
@@ -117,13 +121,18 @@ const reducer = (state = initialState, action) => {
         newPrompts: promptsAfterFinishRound,
       } = takeNewPrompt(state.prompts);
 
+      const currentEventAfterFinishRound =
+        state.round !== 3
+          ? FIBBAGE_EVENT_TYPE.answeringPrompt
+          : FIBBAGE_EVENT_TYPE.gameOver;
+
       return {
         ...state,
 
         players: playersAfterFinishRound,
         prompts: promptsAfterFinishRound,
 
-        currentEvent: FIBBAGE_EVENT_TYPE.answeringPrompt,
+        currentEvent: currentEventAfterFinishRound,
         currentPrompt: currentPromptAfterFinishRound,
 
         round: state.round + 1,
@@ -159,7 +168,7 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export const FibbageContext = React.createContext({
+const FibbageContext = React.createContext({
   state: { ...initialState },
   addPlayer: () => {},
   removePlayer: () => {},
@@ -175,10 +184,6 @@ const FibbageProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const addPlayer = (player) => {
-    player.score = 0;
-    player.answer = null;
-    player.choice = null;
-
     dispatch({ type: actionType.ADD_PLAYER, player });
   };
 
@@ -228,3 +233,5 @@ const FibbageProvider = ({ children }) => {
 };
 
 export default FibbageProvider;
+
+export const useFibbageContext = () => useContext(FibbageContext);

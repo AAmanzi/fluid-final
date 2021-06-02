@@ -4,7 +4,7 @@ import { ButtonSecondary, Input } from 'src/components/styled';
 
 import { ButtonCreateGame, Label } from './index.styled';
 
-const MainScreen = ({ setSelectGameTypeScreen, joinGame, joinError }) => {
+const MainScreen = ({ setSelectGameTypeScreen, joinGame, error }) => {
   const [username, setUsername] = useState('');
   const [roomCode, setRoomCode] = useState('');
 
@@ -48,7 +48,7 @@ const MainScreen = ({ setSelectGameTypeScreen, joinGame, joinError }) => {
           onChange={handleRoomCodeChange}
           placeholder='4-LETTER CODE'
         />
-        {joinError && <p>Invalid room code!</p>}
+        {error && <p>{error}</p>}
       </div>
       <div>
         <Label>Name</Label>

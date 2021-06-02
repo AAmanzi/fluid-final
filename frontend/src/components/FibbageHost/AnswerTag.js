@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { usePlayers } from 'src/providers/fibbage/hooks';
+
+import { useFibbageContext } from 'src/providers/fibbage';
 import { wait } from 'src/utils/wait';
 
 import {
@@ -27,7 +28,9 @@ const AnswerTag = ({
   shouldStartDisplayingResults,
   onEnd,
 }) => {
-  const players = usePlayers();
+  const {
+    state: { players },
+  } = useFibbageContext();
   const [event, setEvent] = useState(EVENT.onlyValue);
 
   const disappearsIn =

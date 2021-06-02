@@ -1,7 +1,7 @@
 import React from 'react';
-import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
-import { useCurrentEvent, usePlayers } from 'src/providers/fibbage/hooks';
+import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
+import { useFibbageContext } from 'src/providers/fibbage';
 
 import {
   PlayerName,
@@ -15,8 +15,9 @@ import {
 } from './index.styled';
 
 const PlayerList = () => {
-  const currentEvent = useCurrentEvent();
-  const players = usePlayers();
+  const {
+    state: { players, currentEvent },
+  } = useFibbageContext();
 
   const getHasAnswered = (player) => {
     if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {

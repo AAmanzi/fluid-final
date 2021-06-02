@@ -39,6 +39,22 @@ const handleCreate = (socket, io) => {
 
         io.to(firstPlayerSocket).emit('client/receive/toggle-start-button');
       }
+
+      io.to(socketId).emit('client/receive/join-success', {
+        roomCode: room.code,
+      });
+    });
+
+    socket.on('host/send/room-full', ({ socketId }) => {
+      io.to(socketId).emit('client/receive/join-error', {
+        message: 'Room is full',
+      });
+    });
+
+    socket.on('host/send/game-started', ({ socketId }) => {
+      io.to(socketId).emit('client/receive/join-error', {
+        message: 'Game already started',
+      });
     });
 
     socket.on('host/send/player-disconnect', ({ socketId }) => {
@@ -62,14 +78,12 @@ const handleJoin = (socket, io) => {
     const room = await RoomsResolver.query.room(roomCode);
 
     if (!room) {
-      socket.emit('client/receive/join-error');
+      socket.emit('client/receive/join-error', {
+        message: 'Invalid room code',
+      });
 
       return;
     }
-
-    socket.emit('client/receive/join-success', {
-      roomCode: room.code,
-    });
 
     io.to(room.hostId).emit('host/receive/player-join', {
       name: username,

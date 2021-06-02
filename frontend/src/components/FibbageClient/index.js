@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 import { socket } from 'src/config';
-import { ButtonPrimary } from 'src/components/styled';
+import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
+import IsWaiting from './IsWaiting';
+import NotStarted from './NotStarted';
 import ChoosingAnswers from './ChoosingAnswers';
 import AnsweringPrompt from './AnsweringPrompt';
 
-import { Screen, GameContainer, Text } from './index.styled';
-import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
+import { Screen, GameContainer } from './index.styled';
 
 const FibbageClient = () => {
-  const [isStarted, setIsStarted] = useState(false);
   const [isFirstPlayer, setIsFirstPlayer] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
 
   const [prompt, setPrompt] = useState(null);
   const [answers, setAnswers] = useState(null);
-  const [currentEvent, setCurrentEvent] = useState(FIBBAGE_EVENT_TYPE);
+  const [currentEvent, setCurrentEvent] = useState(
+    FIBBAGE_EVENT_TYPE.notStarted
+  );
 
   useEffect(() => {
     socket.on('client/receive/toggle-start-button', () => {
@@ -40,21 +42,16 @@ const FibbageClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.off('client/receive/start-answering');
     socket.on('client/receive/start-answering', ({ prompt }) => {
       setCurrentEvent(FIBBAGE_EVENT_TYPE.answeringPrompt);
       setPrompt(prompt);
       setIsWaiting(false);
-
-      if (!isStarted) {
-        setIsStarted(true);
-      }
     });
 
     return () => {
       socket.off('client/receive/start-answering');
     };
-  }, [isStarted]);
+  }, []);
 
   useEffect(() => {
     socket.on('client/receive/start-choosing', ({ answers }) => {
@@ -73,10 +70,6 @@ const FibbageClient = () => {
     };
   }, []);
 
-  const startGame = () => {
-    socket.emit('client/send/start-game');
-  };
-
   const onAnswerConfirm = () => {
     setPrompt(null);
     setIsWaiting(true);
@@ -88,21 +81,12 @@ const FibbageClient = () => {
   };
 
   const getContent = () => {
-    if (!isStarted) {
-      return (
-        <>
-          <Text>Waiting for players to join</Text>
-          {isFirstPlayer && (
-            <ButtonPrimary onClick={startGame} content='START GAME'>
-              START GAME
-            </ButtonPrimary>
-          )}
-        </>
-      );
+    if (isWaiting) {
+      return <IsWaiting />;
     }
 
-    if (isWaiting) {
-      return <Text>Sit back and relax</Text>;
+    if (currentEvent === FIBBAGE_EVENT_TYPE.notStarted) {
+      return <NotStarted canStartGame={isFirstPlayer} />;
     }
 
     if (currentEvent === FIBBAGE_EVENT_TYPE.answeringPrompt) {

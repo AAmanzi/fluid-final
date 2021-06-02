@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 
 import { socket } from 'src/config';
-import { useCurrentPrompt } from 'src/providers/fibbage/hooks';
+import { useFibbageContext } from 'src/providers/fibbage';
 import PromptInfo from 'src/components/FibbagePromptInfo';
 
 import { DisplayContainer } from './index.styled';
 
 const AnsweringPrompt = () => {
-  const currentPrompt = useCurrentPrompt();
+  const {
+    state: { currentPrompt },
+  } = useFibbageContext();
 
   useEffect(() => {
     socket.emit('host/send/start-answering', {

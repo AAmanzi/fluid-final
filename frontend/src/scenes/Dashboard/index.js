@@ -15,7 +15,7 @@ const SCREEN = Object.freeze({
 
 const StartScreen = () => {
   const [screen, setScreen] = useState(SCREEN.main);
-  const [joinError, setJoinError] = useState(false);
+  const [error, setError] = useState(null);
   const [joinedRoomCode, setJoinedRoomCode] = useState(null);
   const [createdRoomCode, setCreatedRoomCode] = useState(null);
 
@@ -30,12 +30,12 @@ const StartScreen = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('client/receive/join-error', () => {
-      setJoinError(true);
+    socket.on('client/receive/join-error', ({ message }) => {
+      setError(message);
     });
 
     return () => {
-      socket.off('client/receive/join-error');
+      socket.off('client/receive/invalid-room-code');
     };
   }, []);
 
@@ -94,7 +94,7 @@ const StartScreen = () => {
       <MainScreen
         setSelectGameTypeScreen={setSelectGameTypeScreen}
         joinGame={joinGame}
-        joinError={joinError}
+        error={error}
       />
     );
   };
