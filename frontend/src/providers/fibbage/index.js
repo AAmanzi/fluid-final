@@ -18,10 +18,8 @@ const initialPrompts = promptsDevMode ? devPrompts : prodPrompts;
 const initialState = {
   players: initialPlayers,
   prompts: initialPrompts,
-
   currentPrompt: null,
   currentEvent: FIBBAGE_EVENT_TYPE.notStarted,
-
   round: 1,
 };
 
@@ -79,10 +77,8 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-
         players: playersAfterStartGame,
         prompts: promptsAfterStartGame,
-
         currentEvent: FIBBAGE_EVENT_TYPE.answeringPrompt,
         currentPrompt: currentPromptAfterStartGame,
       };
@@ -128,13 +124,10 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-
         players: playersAfterFinishRound,
         prompts: promptsAfterFinishRound,
-
         currentEvent: currentEventAfterFinishRound,
         currentPrompt: currentPromptAfterFinishRound,
-
         round: state.round + 1,
       };
     case actionType.SET_PLAYER_ANSWER:

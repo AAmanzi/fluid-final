@@ -2,14 +2,10 @@ import { ButtonPrimary } from 'src/components/styled';
 import styled from 'styled-components';
 
 export const DashboardContainer = styled.div`
-  & input {
-  }
-
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-
   position: relative;
 `;
 

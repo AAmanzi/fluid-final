@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { useFibbageContext } from 'src/providers/fibbage';
+import { ButtonPrimary, Text } from 'src/components/styled';
 
-import { Text, WaitingContainer, ButtonStart } from './index.styled';
+import { NotStartedContainer } from './index.styled';
 
 const NotStarted = () => {
   const {
@@ -11,14 +12,14 @@ const NotStarted = () => {
   } = useFibbageContext();
 
   return (
-    <WaitingContainer>
+    <NotStartedContainer>
       <Text>Waiting for players to join</Text>
       {players?.length > 1 && (
-        <ButtonStart onClick={startGame} content='START GAME'>
+        <ButtonPrimary onClick={startGame} content='START GAME'>
           START GAME
-        </ButtonStart>
+        </ButtonPrimary>
       )}
-    </WaitingContainer>
+    </NotStartedContainer>
   );
 };
 

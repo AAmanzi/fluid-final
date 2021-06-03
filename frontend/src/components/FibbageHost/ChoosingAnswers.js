@@ -17,6 +17,11 @@ const ChoosingAnswers = () => {
     state: { players, currentPrompt },
   } = useFibbageContext();
 
+  useEffect(() => {
+    socket.emit('host/send/start-choosing', { answers });
+    // eslint-disable-next-line
+  }, []);
+
   const playerAnswers = players.map((player) => ({
     playerId: player.socketId,
     value: player.answer,
@@ -29,14 +34,9 @@ const ChoosingAnswers = () => {
     },
   ]);
 
-  useEffect(() => {
-    socket.emit('host/send/start-choosing', { answers });
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <DisplayContainer>
-      <PromptInfo prompt={currentPrompt} hideTitle hideDescription />
+      <PromptInfo prompt={currentPrompt} hideTitle />
       <AnswersContainer>
         {answers.map((answer, index) => (
           <AnswerTagContainer key={index}>

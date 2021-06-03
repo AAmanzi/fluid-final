@@ -1,9 +1,7 @@
 import React from 'react';
 
 import { socket } from 'src/config';
-import { ButtonPrimary } from 'src/components/styled';
-
-import { Text } from './index.styled';
+import { ButtonPrimary, Text } from 'src/components/styled';
 
 const NotStarted = ({ canStartGame }) => {
   const startGame = () => {

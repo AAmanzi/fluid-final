@@ -73,9 +73,9 @@ const DisplayResults = ({ onEnd }) => {
 
   return (
     <DisplayContainer>
-      <PromptInfo prompt={currentPrompt} hideTitle hideDescription />
+      <PromptInfo prompt={currentPrompt} hideTitle />
       <AnswersContainer>
-        {shuffledAnswers.map((answer, index) => (
+        {shuffledAnswers.map((answer) => (
           <AnswerTag
             key={answer.playerId}
             value={answer.value}

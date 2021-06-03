@@ -71,3 +71,15 @@ export const Input = styled.input`
     transform: translate3d(-2px, 2px, 0);
   }
 `;
+
+export const Text = styled.p`
+  font-size: 50px;
+  margin: 18px;
+  max-width: 640px;
+`;
+
+export const TextSecondary = styled.p`
+  font-size: 24px;
+  margin: 18px;
+  max-width: 640px;
+`;

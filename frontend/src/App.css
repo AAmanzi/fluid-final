@@ -51,6 +51,17 @@ button:disabled:hover {
   opacity: 0.9;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  margin: 0;
+}
+
 @font-face {
   font-family: 'Roboto';
   src: url('./assets/fonts/Roboto-Medium.ttf') format('truetype');

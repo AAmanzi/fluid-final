@@ -1,10 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 
 const appearAnimation = keyframes`
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 `;
@@ -46,10 +46,4 @@ export const PromptContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-export const Text = styled.p`
-  font-size: 50px;
-  margin: 18px;
-  max-width: 640px;
 `;

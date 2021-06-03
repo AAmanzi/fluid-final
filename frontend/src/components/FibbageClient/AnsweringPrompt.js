@@ -16,7 +16,7 @@ const AnsweringPrompt = ({ prompt, onConfirm }) => {
 
   return (
     <PromptContainer>
-      <PromptInfo prompt={prompt} hideTitle={true} hideDescription={true} />
+      <PromptInfo prompt={prompt} hideTitle />
       <Input
         type='text'
         value={answer}

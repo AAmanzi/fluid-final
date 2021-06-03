@@ -26,45 +26,6 @@ export const GameContainer = styled.div`
   background-color: transparent;
 `;
 
-export const HeadingMain = styled.h1`
-  font-size: 120px;
-  margin: 20px;
-  animation: ${appearAnimation} 0.4s ease-in-out;
-`;
-
-export const ButtonStart = styled.button`
-  margin: 4px;
-  background-color: #635e5e99;
-  color: transparent;
-  padding: 0 16px;
-  font-size: 44px;
-  position: relative;
-  border-radius: 10px;
-
-  :hover {
-    background-color: #635e5eb3;
-
-    ::after {
-      background-color: #ee5d6cb3;
-      color: #282856b3;
-      transform: translate3d(-2px, 2px, 0);
-    }
-  }
-
-  ::after {
-    ${({ content }) => content && `content: "${content}";`}
-    transition: background 0.2s ease-in-out, transform 0.2s ease-in-out, color 0.2s ease-in-out;
-    position: absolute;
-    background-color: #ee5d6c99;
-    color: #28285699;
-    width: 100%;
-    height: 100%;
-    bottom: 6px;
-    left: 6px;
-    border-radius: 10px;
-  }
-`;
-
 export const DisplayContainer = styled.div`
   animation: ${appearAnimation} 0.8s ease-in-out;
   flex-basis: 60%;
@@ -80,50 +41,35 @@ export const Outcome = styled.div`
   animation: ${appearAnimation} 0.4s ease-in-out;
 `;
 
-export const PlayerName = styled.h3`
-  margin: 0 0 0 6px;
-`;
-
-export const PlayerCard = styled.div`
-  text-align: center;
-  border-radius: 40px;
-  margin-top: -1px;
-  margin-bottom: 5px;
-  width: 140px;
-  background-color: #ffffff;
-  padding: 6px 14px 6px 14px;
-  height: 48px;
-  position: relative;
-
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  &:nth-child(odd) {
-    margin-right: 1px;
-  }
-
-  ${({ hasAnswered }) => hasAnswered && `background-color: #ee5d6c99;`}
-`;
-
 export const PlayerListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 20px;
-  padding-left: 0;
+  margin: 20px 20px 20px 0;
   align-self: center;
   height: calc(100vh - 44px);
   flex-basis: 20%;
 `;
 
-export const Players = styled.div`
+export const PlayerWrapper = styled.div`
+  border-radius: 40px;
+  margin-bottom: 5px;
+  background-color: #ffffff;
+  padding: 6px 14px;
+  position: relative;
   display: flex;
   justify-content: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
+
+  ${({ hasAnswered }) =>
+    hasAnswered &&
+    css`
+      background-color: #ee5d6c99;
+    `}
 `;
 
-export const PlayerNumber = styled.div`
+export const PlayerIndex = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,33 +82,12 @@ export const PlayerNumber = styled.div`
   line-height: 22px;
 `;
 
-export const PlayerTags = styled.div`
-  min-height: 20px;
-  margin-bottom: -10px;
+export const PlayerInfoWrapper = styled.div`
+  margin-left: 6px;
 `;
 
-export const PlayerInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-export const PlayerTag = styled.button`
+export const PlayerScore = styled.button`
   border-radius: 10px;
-  position: relative;
-`;
-
-export const Text = styled.p`
-  font-size: 50px;
-  margin: 18px;
-  max-width: 640px;
-`;
-
-export const TextAlt = styled.p`
-  font-size: 24px;
-  margin: 18px;
-  max-width: 640px;
 `;
 
 export const PromptContainer = styled.div`
@@ -178,26 +103,7 @@ export const SidebarContainer = styled.div`
   height: calc(100vh - 44px);
 `;
 
-export const CounterList = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  background-color: #ffffff96;
-  border-radius: 30px;
-  padding: 4px 36px;
-  min-height: 10px;
-
-  ${({ hidden }) => hidden && 'background-color: transparent;'}
-`;
-
-export const Counter = styled.div`
-  font-size: 36px;
-  animation: ${appearAnimation} 0.8s ease-in-out;
-  text-transform: uppercase;
-`;
-
-export const WaitingContainer = styled.div`
+export const NotStartedContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -209,20 +115,6 @@ export const RoomCode = styled.h3`
   color: #282856;
   font-size: 54px;
   margin: 0;
-`;
-
-export const NumberContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff80;
-  padding: 30px 100px;
-  border-radius: 30px;
-
-  h1 {
-    font-size: 200px !important;
-  }
 `;
 
 export const AnswersContainer = styled.div`
@@ -270,7 +162,6 @@ export const AnswerTagContainerAbsolute = styled.div`
   left: 50%;
 
   ${({ disappearsIn }) =>
-    disappearsIn &&
     css`
       animation: ${modalScaleAnimation} 0.4s ease-in-out both,
         ${modalScaleAnimation} 0.4s ${disappearsIn}ms ease-in-out reverse
@@ -296,10 +187,8 @@ export const AnswerTagPlayerTag = styled.div`
   margin: 5px;
 
   ${({ delay }) =>
-    delay &&
     css`
-      animation: ${appearAnimation} 0.5s ${delay}ms ease-in-out;
-      animation-fill-mode: both;
+      animation: ${appearAnimation} 0.5s ${delay}ms ease-in-out both;
     `}
 `;
 
@@ -315,4 +204,39 @@ export const AnswerTagPoint = styled.div`
   height: 10px;
   border-radius: 50%;
   background-color: #ee5d6c;
+`;
+
+const flyInAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+export const GameOverPlayerResultsWrapper = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+`;
+
+export const GameOverPlayerResult = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid #ee5d6c;
+
+  &:not(:first-child) {
+    margin-bottom: 5px;
+  }
+
+  &:last-child {
+    border-color: #f0b747;
+  }
+
+  ${({ delay }) =>
+    css`
+      animation: ${flyInAnimation} 0.5s ${delay}ms ease-in-out both;
+    `}
 `;

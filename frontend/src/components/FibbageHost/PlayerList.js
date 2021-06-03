@@ -4,14 +4,11 @@ import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 import { useFibbageContext } from 'src/providers/fibbage';
 
 import {
-  PlayerName,
-  PlayerCard,
-  PlayerTag,
-  PlayerTags,
-  PlayerNumber,
+  PlayerWrapper,
+  PlayerScore,
+  PlayerIndex,
   PlayerListContainer,
-  Players,
-  PlayerInfo,
+  PlayerInfoWrapper,
 } from './index.styled';
 
 const PlayerList = () => {
@@ -35,21 +32,17 @@ const PlayerList = () => {
 
   return (
     <PlayerListContainer>
-      <Players>
-        {players.map((player, index) => (
-          <PlayerCard
-            key={player.socketId}
-            hasAnswered={getHasAnswered(player)}>
-            <PlayerNumber>{index + 1}</PlayerNumber>
-            <PlayerInfo>
-              <PlayerName>{player.name}</PlayerName>
-              <PlayerTags>
-                <PlayerTag>{player.score}</PlayerTag>
-              </PlayerTags>
-            </PlayerInfo>
-          </PlayerCard>
-        ))}
-      </Players>
+      {players.map((player, index) => (
+        <PlayerWrapper
+          key={player.socketId}
+          hasAnswered={getHasAnswered(player)}>
+          <PlayerIndex>{index + 1}</PlayerIndex>
+          <PlayerInfoWrapper>
+            <h3>{player.name}</h3>
+            <PlayerScore>{player.score}</PlayerScore>
+          </PlayerInfoWrapper>
+        </PlayerWrapper>
+      ))}
     </PlayerListContainer>
   );
 };

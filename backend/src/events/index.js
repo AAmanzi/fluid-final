@@ -37,7 +37,7 @@ const handleCreate = (socket, io) => {
       if (playerSockets.length === 2) {
         const firstPlayerSocket = playerSockets[0];
 
-        io.to(firstPlayerSocket).emit('client/receive/toggle-start-button');
+        io.to(firstPlayerSocket).emit('client/receive/is-moderator');
       }
 
       io.to(socketId).emit('client/receive/join-success', {
@@ -57,7 +57,21 @@ const handleCreate = (socket, io) => {
       });
     });
 
+    socket.on('host/send/game-over', () => {
+      playerSockets.forEach((socket) => {
+        io.to(socket).emit('client/receive/game-over');
+      });
+    });
+
     socket.on('host/send/player-disconnect', ({ socketId }) => {
+      const currentModerator = playerSockets[0];
+
+      if (currentModerator.socketId === socketId) {
+        const newModerator = playerSockets[1];
+
+        io.to(newModerator).emit('client/receive/is-moderator');
+      }
+
       playerSockets = playerSockets.filter(
         (playerSocketId) => playerSocketId !== socketId
       );
