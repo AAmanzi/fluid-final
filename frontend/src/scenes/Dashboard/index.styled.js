@@ -10,17 +10,16 @@ export const DashboardContainer = styled.div`
 `;
 
 export const Container = styled.div`
-  margin-bottom: 120px;
+  padding-bottom: 120px;
 `;
 
 export const Logo = styled.img`
   position: absolute;
-  bottom: 80px;
-  left: 30px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 
   @media screen and (max-width: 768px) {
-    bottom: 20px;
-    left: initial;
     height: 100px;
   }
 `;
