@@ -17,7 +17,7 @@ export const Screen = styled.div`
 
   position: relative;
 
-  ::after {
+  &::after {
     content: '';
     position: absolute;
     top: 0;
@@ -46,4 +46,14 @@ export const PromptContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+export const ChoosingAnswersButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;

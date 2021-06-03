@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ButtonPrimary = styled.button`
   margin: 4px;
@@ -9,18 +9,22 @@ export const ButtonPrimary = styled.button`
   position: relative;
   border-radius: 10px;
 
-  :hover {
+  &:hover {
     background-color: #635e5eb3;
 
-    ::after {
+    &::after {
       background-color: #ee5d6cb3;
       color: #282856b3;
       transform: translate3d(-2px, 2px, 0);
     }
   }
 
-  ::after {
-    ${({ content }) => content && `content: "${content}";`}
+  &::after {
+    ${({ content }) =>
+      content &&
+      css`
+        content: '${content}';
+      `}
     transition: background 0.2s ease-in-out, transform 0.2s ease-in-out, color 0.2s ease-in-out;
     position: absolute;
     background-color: #ee5d6c99;
@@ -39,20 +43,40 @@ export const ButtonSecondary = styled.button`
   border-radius: 10px;
   margin-top: 10px;
 
-  ${({ background }) => background === 'red' && 'background-color: #ee5d6c;'}
-  ${({ background }) => background === 'blue' && 'background-color: #282856;'}
+  ${({ background }) => {
+    if (background === 'red') {
+      return css`
+        background-color: #ee5d6c;
+      `;
+    }
+
+    if (background === 'blue') {
+      return css`
+        background-color: #282856;
+      `;
+    }
+  }}
 `;
 
 export const ButtonRadio = styled.button`
-  border-radius: 30px;
-  font-size: 64px;
-  margin-top: 12px;
-  margin-bottom: 12px;
-  text-transform: uppercase;
+  border-radius: 10px;
+  font-size: 24px;
+  background-color: white;
   border: 2px solid #ffffff;
   transition: border 0.2s ease-in-out;
+  color: #282856;
+  padding: 4px;
+  width: 100%;
 
-  ${({ isSelected }) => isSelected && 'border: 2px solid #ee5d6c;'};
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      border: 2px solid #282856;
+    `};
 `;
 
 export const Input = styled.input`
@@ -65,8 +89,9 @@ export const Input = styled.input`
   margin-bottom: 8px;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   color: #282856;
+  align-self: center;
 
-  :focus {
+  &:focus {
     box-shadow: -4px 4px 0px 0px rgba(99, 94, 94, 1);
     transform: translate3d(-2px, 2px, 0);
   }

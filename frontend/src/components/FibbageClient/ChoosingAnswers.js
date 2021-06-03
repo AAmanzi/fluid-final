@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { socket } from 'src/config';
 import { ButtonRadio, ButtonSecondary } from 'src/components/styled';
 
-import { PromptContainer } from './index.styled';
+import { ChoosingAnswersButtonWrapper, PromptContainer } from './index.styled';
 
 const ChoosingAnswers = ({ answers, onConfirm }) => {
   const [choice, setChoice] = useState(null);
@@ -26,13 +26,16 @@ const ChoosingAnswers = ({ answers, onConfirm }) => {
 
   return (
     <PromptContainer>
-      {answers.map((answer) => (
-        <ButtonRadio
-          onClick={() => setChoice(answer)}
-          isSelected={getIsSelected(answer)}>
-          {answer.value}
-        </ButtonRadio>
-      ))}
+      <ChoosingAnswersButtonWrapper>
+        {answers.map((answer) => (
+          <ButtonRadio
+            key={answer.playerId}
+            onClick={() => setChoice(answer)}
+            isSelected={getIsSelected(answer)}>
+            {answer.value}
+          </ButtonRadio>
+        ))}
+      </ChoosingAnswersButtonWrapper>
 
       <ButtonSecondary
         background='red'

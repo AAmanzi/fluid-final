@@ -1,10 +1,9 @@
 import React, { useContext, useReducer } from 'react';
 
-import { playersDevMode, promptsDevMode } from 'src/config';
+import { playersDevMode } from 'src/config';
 import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
-import devPrompts from './_prompts.const';
-import prodPrompts from './prompts.const';
+import initialPrompts from './prompts.const';
 import devPlayers from './_players.const';
 import {
   getScoreForCorrectAnswer,
@@ -13,7 +12,6 @@ import {
 } from './utils';
 
 const initialPlayers = playersDevMode ? devPlayers : [];
-const initialPrompts = promptsDevMode ? devPrompts : prodPrompts;
 
 const initialState = {
   players: initialPlayers,

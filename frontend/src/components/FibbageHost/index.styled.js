@@ -84,6 +84,10 @@ export const PlayerIndex = styled.div`
 
 export const PlayerInfoWrapper = styled.div`
   margin-left: 6px;
+
+  & > * {
+    text-align: left;
+  }
 `;
 
 export const PlayerScore = styled.button`

@@ -39,7 +39,11 @@ const PlayerList = () => {
           <PlayerIndex>{index + 1}</PlayerIndex>
           <PlayerInfoWrapper>
             <h3>{player.name}</h3>
-            <PlayerScore>{player.score}</PlayerScore>
+            <div>
+              <p>
+                Score: <PlayerScore>{player.score}</PlayerScore>
+              </p>
+            </div>
           </PlayerInfoWrapper>
         </PlayerWrapper>
       ))}
