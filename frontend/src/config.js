@@ -7,4 +7,13 @@ export const socket = io(apiUrl);
 
 export const playersDevMode = dev && false; // TODO: turn off
 
-export const fibbageMaxPlayers = 8;
+export const fibbageConfig = {
+  maxPlayers: 8,
+};
+
+export const connectFourConfig = {
+  boardSize: {
+    rows: 6,
+    columns: 7,
+  },
+};

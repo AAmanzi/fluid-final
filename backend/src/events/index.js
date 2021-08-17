@@ -1,5 +1,8 @@
 import fibbageHostEvents from './host/fibbage';
+import connectFourHostEvents from './host/connectFour';
 import fibbageClientEvents from './client/fibbage';
+import connectFourClientEvents from './client/fibbage';
+
 import RoomsResolver from '../resolvers/Room';
 import { roomTypeEnum } from '../models/Room';
 
@@ -27,6 +30,9 @@ const handleCreate = (socket, io) => {
       case roomTypeEnum.fibbage:
         fibbageHostEvents(socket, io, getPlayerSockets);
         break;
+      case roomTypeEnum.connectFour:
+        connectFourHostEvents(socket, io, getPlayerSockets);
+        break;
       default:
         break;
     }
@@ -42,6 +48,7 @@ const handleCreate = (socket, io) => {
 
       io.to(socketId).emit('client/receive/join-success', {
         roomCode: room.code,
+        roomType: type,
       });
     });
 
@@ -107,6 +114,9 @@ const handleJoin = (socket, io) => {
     switch (room.type) {
       case roomTypeEnum.fibbage:
         fibbageClientEvents(socket, io, room.hostId);
+        break;
+      case roomTypeEnum.connectFour:
+        connectFourClientEvents(socket, io, room.hostId);
         break;
       default:
         break;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { socket, fibbageMaxPlayers } from 'src/config';
+import { socket, fibbageConfig } from 'src/config';
 import { useFibbageContext } from 'src/providers/fibbage';
 import { FIBBAGE_EVENT_TYPE } from 'src/consts/enums';
 
@@ -40,7 +40,7 @@ const FibbageHost = () => {
         return;
       }
 
-      if (players.length === fibbageMaxPlayers) {
+      if (players.length === fibbageConfig.maxPlayers) {
         socket.emit('host/send/room-full', { socketId });
 
         return;

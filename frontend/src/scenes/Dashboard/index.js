@@ -8,20 +8,22 @@ import MainScreen from './MainScreen';
 import SelectGameTypeScreen from './SelectGameTypeScreen';
 import { DashboardContainer, Logo, Container } from './index.styled';
 
-const SCREEN = Object.freeze({
+const Screen = Object.freeze({
   main: 'main',
   selectGameType: 'selectGameType',
 });
 
 const StartScreen = () => {
-  const [screen, setScreen] = useState(SCREEN.main);
+  const [screen, setScreen] = useState(Screen.main);
   const [error, setError] = useState(null);
   const [joinedRoomCode, setJoinedRoomCode] = useState(null);
   const [createdRoomCode, setCreatedRoomCode] = useState(null);
+  const [roomType, setRoomType] = useState(null);
 
   useEffect(() => {
-    socket.on('client/receive/join-success', ({ roomCode }) => {
+    socket.on('client/receive/join-success', ({ roomCode, roomType }) => {
       setJoinedRoomCode(roomCode);
+      setRoomType(roomType);
     });
 
     return () => {
@@ -58,30 +60,31 @@ const StartScreen = () => {
   };
 
   const handleCreateGame = (type) => {
+    setRoomType(type);
     socket.emit('host/send/create', {
       socketId: socket.id,
       type,
     });
   };
 
-  if (createdRoomCode) {
-    return <Redirect to={`/host/${createdRoomCode}`} />;
+  if (createdRoomCode && roomType) {
+    return <Redirect to={`/host/${roomType}/${createdRoomCode}`} />;
   }
 
-  if (joinedRoomCode) {
-    return <Redirect to={`/room/${joinedRoomCode}`} />;
+  if (joinedRoomCode && roomType) {
+    return <Redirect to={`/room/${roomType}/${joinedRoomCode}`} />;
   }
 
   const setSelectGameTypeScreen = () => {
-    setScreen(SCREEN.selectGameType);
+    setScreen(Screen.selectGameType);
   };
 
   const setMainScreen = () => {
-    setScreen(SCREEN.main);
+    setScreen(Screen.main);
   };
 
   const getContent = () => {
-    if (screen === SCREEN.selectGameType) {
+    if (screen === Screen.selectGameType) {
       return (
         <SelectGameTypeScreen
           goBack={setMainScreen}
