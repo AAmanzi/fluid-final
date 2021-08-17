@@ -6,7 +6,7 @@ export const rooms = () => knex.table(TABLE_NAME);
 
 export const roomTypeEnum = Object.freeze({
   fibbage: 'fibbage',
-  connectFour: 'connectFour'
+  connectFour: 'connectFour',
 });
 
 export const initTable = () => {

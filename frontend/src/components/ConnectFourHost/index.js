@@ -59,6 +59,8 @@ const ConnectFourHost = () => {
     socket.off('host/receive/start-game');
     socket.on('host/receive/start-game', () => {
       startGame();
+
+      socket.emit('host/send/start-game');
     });
 
     return () => {
@@ -77,11 +79,26 @@ const ConnectFourHost = () => {
     };
   }, [dropCoin]);
 
+  const playerOneSocketId = playerOne?.socketId;
+  const playerTwoSocketId = playerTwo?.socketId;
+
   useEffect(() => {
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.gameOver) {
       socket.emit('host/send/game-over');
     }
-  }, [currentEvent]);
+
+    if (currentEvent === CONNECT_FOUR_EVENT_TYPE.playerOneTurn) {
+      socket.emit('host/send/player-turn', {
+        socketId: playerOneSocketId,
+      });
+    }
+
+    if (currentEvent === CONNECT_FOUR_EVENT_TYPE.playerTwoTurn) {
+      socket.emit('host/send/player-turn', {
+        socketId: playerTwoSocketId,
+      });
+    }
+  }, [currentEvent, playerOneSocketId, playerTwoSocketId]);
 
   const getContent = () => {
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.notStarted) {

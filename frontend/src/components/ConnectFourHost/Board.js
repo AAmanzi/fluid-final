@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { socket } from 'src/config';
 import { useConnectFourContext } from 'src/providers/connectFour';
 import {
   BoardCellChip,
@@ -10,19 +11,16 @@ import {
 const Board = () => {
   const {
     state: { board },
-    dropCoin,
   } = useConnectFourContext();
 
-  const handleDropCoin = (columnIndex) => {
-    dropCoin(columnIndex);
-  };
+  useEffect(() => {
+    socket.emit('host/send/update-board', { board });
+  }, [board]);
 
   return (
     <BoardContainer>
       {board.map((column, columnIndex) => (
-        <BoardColumnContainer
-          key={columnIndex}
-          onClick={() => handleDropCoin(columnIndex)}>
+        <BoardColumnContainer key={columnIndex}>
           {column.map((cell, rowIndex) => (
             <BoardCellContainer key={rowIndex}>
               {cell !== null && <BoardCellChip value={cell} />}

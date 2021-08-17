@@ -1,7 +1,7 @@
 import fibbageHostEvents from './host/fibbage';
 import connectFourHostEvents from './host/connectFour';
 import fibbageClientEvents from './client/fibbage';
-import connectFourClientEvents from './client/fibbage';
+import connectFourClientEvents from './client/connectFour';
 
 import RoomsResolver from '../resolvers/Room';
 import { roomTypeEnum } from '../models/Room';

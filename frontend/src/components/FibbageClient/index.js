@@ -46,17 +46,6 @@ const FibbageClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('client/receive/skipped', () => {
-      setPrompt(null);
-      setAnswers(null);
-    });
-
-    return () => {
-      socket.off('client/receive/skipped');
-    };
-  }, []);
-
-  useEffect(() => {
     socket.on('client/receive/start-answering', ({ prompt }) => {
       setCurrentEvent(FIBBAGE_EVENT_TYPE.answeringPrompt);
       setPrompt(prompt);
