@@ -107,18 +107,18 @@ export const SidebarContainer = styled.div`
   height: calc(100vh - 44px);
 `;
 
-export const NotStartedContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const RoomCode = styled.h3`
   font-family: 'Annie';
   color: #282856;
   font-size: 54px;
   margin: 0;
+`;
+
+export const NotStartedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const AnswersContainer = styled.div`

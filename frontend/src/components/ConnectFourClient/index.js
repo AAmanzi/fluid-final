@@ -15,6 +15,7 @@ const ConnectFourClient = () => {
 
   const [isModerator, setIsModerator] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isWinner, setIsWinner] = useState(false);
 
   const [board, setBoard] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(
@@ -43,8 +44,12 @@ const ConnectFourClient = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('client/receive/game-over', () => {
+    socket.on('client/receive/game-over', ({ winnerId }) => {
       setCurrentEvent(CONNECT_FOUR_EVENT_TYPE.gameOver);
+
+      if (socket.id === winnerId) {
+        setIsWinner(true);
+      }
     });
 
     return () => {
@@ -55,6 +60,7 @@ const ConnectFourClient = () => {
   useEffect(() => {
     socket.on('client/receive/start-game', () => {
       setCurrentEvent(null);
+      setIsWinner(false);
     });
 
     return () => {
@@ -92,7 +98,7 @@ const ConnectFourClient = () => {
     }
 
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.gameOver) {
-      return <GameOver canRestartGame={isModerator} />;
+      return <GameOver canRestartGame={isModerator} isWinner={isWinner} />;
     }
 
     if (board !== null) {

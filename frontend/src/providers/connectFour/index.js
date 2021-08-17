@@ -9,6 +9,7 @@ const initialState = {
   board: constructNewBoard(),
   currentEvent: CONNECT_FOUR_EVENT_TYPE.notStarted,
   playerToStartGame: PLAYER.one,
+  winnerId: null,
 };
 
 const actionType = Object.freeze({
@@ -65,6 +66,7 @@ const reducer = (state = initialState, action) => {
         board: constructNewBoard(),
         currentEvent: eventAfterStartGame,
         playerToStartGame: playerToStartGameAfterStartGame,
+        winner: null,
       };
     case actionType.HANDLE_DROP_COIN:
       if (
@@ -108,6 +110,10 @@ const reducer = (state = initialState, action) => {
           playerThatDropppedCoin === PLAYER.two
             ? { ...state.playerTwo, score: state.playerTwo.score + 1 }
             : { ...state.playerTwo };
+        const winnerSocketId =
+          playerThatDropppedCoin === PLAYER.one
+            ? playerOneAfterWin.socketId
+            : playerTwoAfterWin.socketId;
 
         return {
           ...state,
@@ -115,6 +121,7 @@ const reducer = (state = initialState, action) => {
           playerOne: playerOneAfterWin,
           playerTwo: playerTwoAfterWin,
           currentEvent: CONNECT_FOUR_EVENT_TYPE.gameOver,
+          winnerId: winnerSocketId,
         };
       }
 

@@ -12,11 +12,7 @@ const events = (socket, io, getPlayerSockets) => {
   });
 
   socket.on('host/send/update-board', ({ board }) => {
-    console.log('HERE');
-
     const playerSockets = getPlayerSockets();
-
-    console.log(playerSockets);
 
     playerSockets.forEach((socket) => {
       io.to(socket).emit('client/receive/update-board', { board });

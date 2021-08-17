@@ -93,3 +93,19 @@ export const PlayerChip = styled.div`
 export const PlayerScore = styled.p`
   text-align: left;
 `;
+
+export const SidebarContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 20%;
+  height: calc(100vh - 44px);
+`;
+
+export const RoomCode = styled.h3`
+  font-family: 'Annie';
+  color: #282856;
+  font-size: 54px;
+  margin: 0;
+`;

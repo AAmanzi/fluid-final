@@ -64,9 +64,9 @@ const handleCreate = (socket, io) => {
       });
     });
 
-    socket.on('host/send/game-over', () => {
+    socket.on('host/send/game-over', (data) => {
       playerSockets.forEach((socket) => {
-        io.to(socket).emit('client/receive/game-over');
+        io.to(socket).emit('client/receive/game-over', data);
       });
     });
 

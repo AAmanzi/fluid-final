@@ -20,11 +20,7 @@ const Board = ({ board, isPlaying, onAfterDropCoin }) => {
 
   return (
     <>
-      {isPlaying ? (
-        <Text>Your turn to play</Text>
-      ) : (
-        <Text>Waiting for other player</Text>
-      )}
+      <Text>{isPlaying ? 'Your turn to play' : 'Waiting for other player'}</Text>
 
       <BoardContainer>
         {board.map((column, columnIndex) => (

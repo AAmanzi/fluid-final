@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { useConnectFourContext } from 'src/providers/connectFour';
 import { CONNECT_FOUR_EVENT_TYPE } from 'src/consts/enums';
@@ -9,10 +10,13 @@ import PlayerList from './PlayerList';
 import NotStarted from './NotStarted';
 
 import { GameContainer, Screen } from './index.styled';
+import Sidebar from './Sidebar';
 
 const ConnectFourHost = () => {
+  const { roomCode } = useParams();
+
   const {
-    state: { playerOne, playerTwo, currentEvent },
+    state: { playerOne, playerTwo, currentEvent, winnerId },
     addPlayer,
     removePlayer,
     startGame,
@@ -84,7 +88,7 @@ const ConnectFourHost = () => {
 
   useEffect(() => {
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.gameOver) {
-      socket.emit('host/send/game-over');
+      socket.emit('host/send/game-over', { winnerId });
     }
 
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.playerOneTurn) {
@@ -98,7 +102,7 @@ const ConnectFourHost = () => {
         socketId: playerTwoSocketId,
       });
     }
-  }, [currentEvent, playerOneSocketId, playerTwoSocketId]);
+  }, [currentEvent, playerOneSocketId, playerTwoSocketId, winnerId]);
 
   const getContent = () => {
     if (currentEvent === CONNECT_FOUR_EVENT_TYPE.notStarted) {
@@ -113,6 +117,7 @@ const ConnectFourHost = () => {
       <GameContainer>
         <PlayerList />
         {getContent()}
+        <Sidebar roomCode={roomCode} />
       </GameContainer>
     </Screen>
   );

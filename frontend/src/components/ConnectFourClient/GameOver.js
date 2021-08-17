@@ -3,14 +3,14 @@ import React from 'react';
 import { socket } from 'src/config';
 import { ButtonPrimary, Text } from 'src/components/styled';
 
-const GameOver = ({ canRestartGame }) => {
+const GameOver = ({ canRestartGame, isWinner }) => {
   const restartGame = () => {
     socket.emit('client/send/start-game');
   };
 
   return (
     <>
-      <Text>Results</Text>
+      <Text>{isWinner ? 'You won!' : 'You lost :('}</Text>
       {canRestartGame && (
         <ButtonPrimary onClick={restartGame} content='RESTART GAME'>
           RESTART GAME
