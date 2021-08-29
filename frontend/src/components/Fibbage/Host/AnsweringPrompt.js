@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { socket } from 'src/config';
 import { useFibbageContext } from 'src/providers/fibbage';
-import PromptInfo from 'src/components/FibbagePromptInfo';
+import PromptInfo from 'src/components/Fibbage/PromptInfo';
 
 import { DisplayContainer } from './index.styled';
 

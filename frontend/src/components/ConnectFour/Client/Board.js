@@ -1,6 +1,6 @@
 import React from 'react';
 import { socket } from 'src/config';
-import { Text } from '../styled';
+import { Text } from '../../styled';
 
 import {
   BoardCellChip,

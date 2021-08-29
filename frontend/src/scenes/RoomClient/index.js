@@ -3,8 +3,8 @@ import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import { dev, playersDevMode } from 'src/config';
 import { ROOM_TYPE } from 'src/consts/enums';
-import FibbageClient from 'src/components/FibbageClient';
-import ConnectFourClient from 'src/components/ConnectFourClient';
+import FibbageClient from 'src/components/Fibbage/Client';
+import ConnectFourClient from 'src/components/ConnectFour/Client';
 
 const RoomClient = () => {
   const history = useHistory();

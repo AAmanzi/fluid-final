@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { groupBy, shuffle } from 'src/utils/array';
 import { useFibbageContext } from 'src/providers/fibbage';
-import PromptInfo from 'src/components/FibbagePromptInfo';
+import PromptInfo from 'src/components/Fibbage/PromptInfo';
 
 import AnswerTag from './AnswerTag';
 import { AnswersContainer, DisplayContainer } from './index.styled';

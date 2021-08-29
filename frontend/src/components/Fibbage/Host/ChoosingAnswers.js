@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { socket } from 'src/config';
 import { shuffle } from 'src/utils/array';
 import { useFibbageContext } from 'src/providers/fibbage';
-import PromptInfo from 'src/components/FibbagePromptInfo';
+import PromptInfo from 'src/components/Fibbage/PromptInfo';
 
 import {
   AnswersContainer,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { socket } from 'src/config';
-import PromptInfo from 'src/components/FibbagePromptInfo';
+import PromptInfo from 'src/components/Fibbage/PromptInfo';
 import { ButtonSecondary, Input } from 'src/components/styled';
 
 import { PromptContainer } from './index.styled';
