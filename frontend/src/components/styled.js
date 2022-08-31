@@ -99,12 +99,12 @@ export const Input = styled.input`
 
 export const Text = styled.p`
   font-size: 50px;
-  margin: 18px;
+  margin: 18px auto;
   max-width: 640px;
 `;
 
 export const TextSecondary = styled.p`
   font-size: 24px;
-  margin: 18px;
+  margin: 18px auto;
   max-width: 640px;
 `;

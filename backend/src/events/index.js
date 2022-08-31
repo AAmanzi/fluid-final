@@ -10,12 +10,6 @@ const handleCreate = (socket, io) => {
   socket.on('host/send/create', async ({ socketId, type }) => {
     const room = await RoomsResolver.mutation.createRoom(type, socketId);
 
-    let playerSockets = [];
-
-    const getPlayerSockets = () => {
-      return playerSockets;
-    };
-
     if (!room) {
       socket.emit('host/receive/room-create-error');
 
@@ -25,6 +19,12 @@ const handleCreate = (socket, io) => {
     socket.emit('host/receive/room-create-success', {
       roomCode: room.code,
     });
+
+    let playerSockets = [];
+
+    const getPlayerSockets = () => {
+      return playerSockets;
+    };
 
     switch (room.type) {
       case roomTypeEnum.fibbage:

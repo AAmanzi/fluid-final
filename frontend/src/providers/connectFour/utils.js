@@ -6,7 +6,7 @@ export const constructNewBoard = () => {
   );
 };
 
-const CAP = 5;
+const CAP = 4;
 
 const getIsWinFromOrderedArray = (array, player) => {
   if (array.length < CAP) {

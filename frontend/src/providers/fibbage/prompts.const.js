@@ -30,12 +30,6 @@ const prompts = [
     answer: 'fingernails',
   },
   {
-    title: 'Lucy',
-    description:
-      'In a 1999 interview with US Weekly, actress Lucy Liu revealed that she once had sex with a ____.',
-    answer: 'ghost',
-  },
-  {
     title: 'squirrels',
     description:
       'The city of Olney, Illinois organizes an annual event in order to ____ squirrels.',
@@ -71,12 +65,6 @@ const prompts = [
     answer: 'beard',
   },
   {
-    title: 'sex ',
-    description:
-      'In 2008, a couple was killed in South Africa while having sex on a ____.',
-    answer: 'railroad track',
-  },
-  {
     title: 'gin',
     description:
       'In the 16th century, gin was referred to as the Mother’s ____.',
@@ -95,7 +83,7 @@ const prompts = [
     answer: '8',
   },
   {
-    title: 'drug cartel ',
+    title: 'drug cartel',
     description:
       'Edgar Valdez Villarreal, a notorious Mexican drug cartel leader, had the not-so-scary nickname “La ____.”',
     answer: 'Barbie',
@@ -165,22 +153,10 @@ const prompts = [
     answer: 'Try',
   },
   {
-    title: 'Anal Secretions ',
-    description:
-      'A beaver’s anal secretions can be used as a ____ substitute in some foods.',
-    answer: 'vanilla',
-  },
-  {
     title: 'Illinois ',
     description:
       'A spectator in an Illinois courtroom was sentenced to six months in jail for ____ during a trial.',
     answer: 'yawning',
-  },
-  {
-    title: 'Monkey',
-    description:
-      'The German Primate Center conducted a study called “Why Female Monkeys ____ During Sex.”',
-    answer: 'Shout',
   },
   {
     title: 'remote controls',
@@ -206,7 +182,7 @@ const prompts = [
     answer: 'shootout',
   },
   {
-    title: 'Beetlejuice ',
+    title: 'Beetlejuice',
     description:
       'A sequel to Beetlejuice titled Beetlejuice Goes ____ was written but never made.',
     answer: 'Hawaiian',
@@ -278,7 +254,7 @@ const prompts = [
     answer: 'kidney stone',
   },
   {
-    title: 'Topeka ',
+    title: 'Topeka',
     description: 'For one day in 1998, Topeka, Kansas renamed itself ____.',
     answer: 'ToPikachu',
   },
@@ -293,12 +269,6 @@ const prompts = [
     description:
       'In 2006, the wax museum Madame Tussaud’s in New York City introduced its first wax ____.',
     answer: 'baby',
-  },
-  {
-    title: 'married ',
-    description:
-      'In 2007, a woman with a rare disorder that causes her to be sexually attracted to inanimate objects married ____.',
-    answer: 'the Eiffel Tower',
   },
   {
     title: 'magician',
@@ -398,12 +368,6 @@ const prompts = [
     answer: 'pipe bomb',
   },
   {
-    title: 'hour',
-    description:
-      'It’s weird work but Jackie Samuel charges $60 an hour to ____.',
-    answer: 'snuggle',
-  },
-  {
     title: 'yelling',
     description:
       'A British woman was arrested for hijacking a British ferry and yelling, “____!”',
@@ -470,12 +434,6 @@ const prompts = [
     answer: 'Zolp',
   },
   {
-    title: '1,000',
-    description:
-      'Edward Smith from Yelm, Washington garnered media attention for his claim that he’s had sex with over 1,000 ____.',
-    answer: 'cars',
-  },
-  {
     title: 'dresses',
     description:
       'Cheap Chic Weddings is an annual contest in which participants make wedding dresses out of ____.',
@@ -500,12 +458,6 @@ const prompts = [
     answer: 'God',
   },
   {
-    title: 'facial ',
-    description:
-      'For $180, the Shizuka New York skin care salon offers an unusual but traditional Japanese facial that is part rice bran and part ____.',
-    answer: 'bird poop',
-  },
-  {
     title: 'wrote',
     description:
       'Edwin E. Holmes, a man with very specific interests, wrote the 254-page book “A History of ____.”',
@@ -516,12 +468,6 @@ const prompts = [
     description:
       'Barbara E. Mattick wrote the book, A Guide to Bone ____ of the 19th and Early 20th Centuries.',
     answer: 'Toothbrushes',
-  },
-  {
-    title: 'gummi',
-    description:
-      'Haribo sells a gummi in Germany that depicts a human butt with ____ growing out of it.',
-    answer: 'ears',
   },
   {
     title: 'hip',

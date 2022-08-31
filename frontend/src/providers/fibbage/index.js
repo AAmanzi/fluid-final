@@ -96,6 +96,7 @@ const reducer = (state = initialState, action) => {
       }));
 
       playersAfterFinishRound.forEach((player) => {
+        // TODO: triba ovo provjerit jos jednom, mislim da se krivo pridjeljuju bodovi
         if (player.choice.playerId === 'correct') {
           player.score += getScoreForCorrectAnswer(state.round);
         } else {
