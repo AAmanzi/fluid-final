@@ -96,12 +96,11 @@ const reducer = (state = initialState, action) => {
       }));
 
       playersAfterFinishRound.forEach((player) => {
-        // TODO: triba ovo provjerit jos jednom, mislim da se krivo pridjeljuju bodovi
         if (player.choice.playerId === 'correct') {
           player.score += getScoreForCorrectAnswer(state.round);
         } else {
           const playerFooledBy = playersAfterFinishRound.find(
-            ({ socketId }) => socketId === player.socketId
+            ({ socketId }) => socketId === player.choice.playerId
           );
 
           playerFooledBy.score += getScoreForFooling(state.round);
